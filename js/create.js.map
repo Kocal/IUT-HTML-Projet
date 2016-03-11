@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "create.js",
+  "sourceRoot": "",
+  "sources": [
+    "create.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA;;AAAA,MAAA,GAAS,SAAA;SACL,OAAO,CAAC,GAAR,CAAY,QAAZ;AADK"
+}

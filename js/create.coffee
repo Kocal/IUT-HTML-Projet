@@ -1,0 +1,2 @@
+create = () ->
+    console.log 'Create'

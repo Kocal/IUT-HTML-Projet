@@ -1,0 +1,2 @@
+preload = () ->
+    console.log 'Preload'
