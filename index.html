@@ -7,13 +7,14 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div id="game-container"></div>
 
 <script src="js/phaser.min.js"></script>
 <script src="js/preload.js"></script>
 <script src="js/create.js"></script>
 <script src="js/update.js"></script>
 <script>
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
+  var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-container', {
     preload: preload,
     create: create,
     update: update
