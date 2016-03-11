@@ -1,0 +1,2 @@
+update = () ->
+    console.log 'Update'
