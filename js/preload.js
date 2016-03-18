@@ -2,7 +2,9 @@
 var preload;
 
 preload = function() {
-  return console.log('Preload');
+  console.log('Preload');
+  game.load.image('fleche_gauche', 'assets/fleche_gauche.png');
+  return game.load.image('fleche_droite', 'assets/fleche_droite.png');
 };
 
 //# sourceMappingURL=preload.js.map
