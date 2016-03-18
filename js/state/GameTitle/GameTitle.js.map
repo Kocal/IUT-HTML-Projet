@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "GameTitle.js",
+  "sourceRoot": "",
+  "sources": [
+    "GameTitle.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,IAAA;;AAAM;;;sBAEF,OAAA,GAAS,SAAA,GAAA;;sBAET,MAAA,GAAQ,SAAA,GAAA;;sBAER,MAAA,GAAQ,SAAA,GAAA"
+}
