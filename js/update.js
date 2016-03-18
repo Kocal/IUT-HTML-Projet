@@ -4,5 +4,3 @@ var update;
 update = function() {
   return console.log('Update');
 };
-
-//# sourceMappingURL=update.js.map
