@@ -22,14 +22,15 @@ create = ->
     game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
     #game.input.onDown.add toggleFullScreen, this
 
-    #if(isSmallScreen())
-    #    toggleFullScreen()
-
     updateBoundings()
     initButtonPlay()
 
 initButtonPlay = ->
-    #buttons.play = game.add.button
+    buttons.play = game.add.button 100, 100, 'Jouer', play, this, 2, 1, 0
+
+play = ->
+    console.log "jouer !";
+    toggleFullScreen()
 
 isSmallScreen = ->
     return window.innerHeight < 768;
