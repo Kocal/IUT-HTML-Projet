@@ -1,8 +1,14 @@
 class GameTitle
 
-    preload: ->
+  constructor: (@game) ->
+    console.log 'GameTitle::constructor()' if debug
 
-    create: ->
+  preload: ->
+    console.log 'GameTitle::preload()' if debug
 
-    update: ->
+  create: ->
+    console.log 'GameTitle::create()' if debug
 
+  update: ->
+    console.log 'GameTitle::update()' if debug
+    

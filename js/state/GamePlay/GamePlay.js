@@ -2,23 +2,28 @@
 var GamePlay;
 
 GamePlay = (function() {
-  function GamePlay() {}
+  function GamePlay(game) {
+    this.game = game;
+    if (debug) {
+      console.log('GamePlay::construct()');
+    }
+  }
 
   GamePlay.prototype.preload = function() {
     if (debug) {
-      return console.log("Boot::preload()");
+      return console.log('GamePlay::preload()');
     }
   };
 
   GamePlay.prototype.create = function() {
     if (debug) {
-      return console.log("Boot::preload()");
+      return console.log('GamePlay::create()');
     }
   };
 
   GamePlay.prototype.update = function() {
     if (debug) {
-      return console.log("Boot::preload()");
+      return console.log('GamePlay::update()');
     }
   };
 

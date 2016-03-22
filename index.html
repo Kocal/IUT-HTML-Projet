@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <meta name="viewport" content="width=device-width">
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div id="game-container"></div>
@@ -14,13 +14,13 @@
 <script src="js/state/GameTitle/GameTitle.js"></script>
 <script src="js/state/GamePlay/GamePlay.js"></script>
 <script>
-  var debug = true;
-  var game = new Phaser.Game("90%", "90%", Phaser.AUTO, 'game-container');
+    var debug = true;
+    var game = new Phaser.Game("90%", "90%", Phaser.AUTO, 'game-container');
 
-  game.state.add("Boot", Boot);
-  game.state.add("GameTitle", GameTitle);
-  game.state.add("GamePlay", GamePlay);
-  game.state.start("Boot");
+    game.state.add("Boot", Boot);
+    game.state.add("GameTitle", GameTitle);
+    game.state.add("GamePlay", GamePlay);
+    game.state.start("Boot");
 </script>
 </body>
 </html>

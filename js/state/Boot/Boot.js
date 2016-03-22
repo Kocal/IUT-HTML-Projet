@@ -5,22 +5,26 @@ Boot = (function() {
   function Boot(game) {
     this.game = game;
     if (debug) {
-      console.log("Boot::constructor()");
+      console.log('Boot::constructor()');
     }
   }
 
   Boot.prototype.preload = function() {
     if (debug) {
-      return console.log("Boot::preload()");
+      return console.log('Boot::preload()');
     }
   };
 
   Boot.prototype.create = function() {
+    var timer;
     if (debug) {
-      console.log("Boot::create()");
+      console.log('Boot::create()');
     }
-    this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
-    return this.game.state.start("GamePlay");
+    timer = this.game.time.create();
+    timer.add(1000, function() {
+      return this.game.state.start('GameTitle');
+    }, this);
+    return timer.start();
   };
 
   return Boot;

@@ -1,11 +1,14 @@
 class GamePlay
 
-    preload: ->
-         console.log "Boot::preload()" if debug
+  constructor: (@game) ->
+    console.log 'GamePlay::construct()' if debug
 
-    create: ->
-                console.log "Boot::preload()" if debug
+  preload: ->
+    console.log 'GamePlay::preload()' if debug
 
-    update: ->
-        console.log "Boot::preload()" if debug
+  create: ->
+    console.log 'GamePlay::create()' if debug
 
+  update: ->
+    console.log 'GamePlay::update()' if debug
+        
