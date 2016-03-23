@@ -3,10 +3,12 @@ body {
 }
 
 #game-container {
-  border: 5px solid $dark-orange;
-
   &, canvas {
     border-radius: 3px;
+  }
+
+  canvas {
+    margin: 0 auto;
     box-shadow: 0 0 5px $light-orange;
   }
 }
