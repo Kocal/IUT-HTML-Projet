@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -10,9 +10,12 @@
 <div id="game-container"></div>
 
 <script src="js/phaser.min.js"></script>
+<script src="js/state/GamePlay/tron.js"></script>
 <script src="js/state/Boot/Boot.js"></script>
 <script src="js/state/GameTitle/GameTitle.js"></script>
 <script src="js/state/GamePlay/GamePlay.js"></script>
+
+
 <script>
     var debug = true;
     var game = new Phaser.Game("90%", "90%", Phaser.AUTO, 'game-container');
@@ -20,7 +23,7 @@
     game.state.add("Boot", Boot);
     game.state.add("GameTitle", GameTitle);
     game.state.add("GamePlay", GamePlay);
-    game.state.start("Boot");
+    game.state.start("GamePlay");
 </script>
 </body>
 </html>

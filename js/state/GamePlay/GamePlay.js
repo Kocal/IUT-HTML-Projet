@@ -2,31 +2,42 @@
 var GamePlay, listenerBoutonD, listenerBoutonG;
 
 GamePlay = (function() {
+  GamePlay.prototype.moteur = null;
+
+  GamePlay.prototype.spriteG = null;
+
+  GamePlay.prototype.spriteD = null;
+
   function GamePlay(game1) {
     this.game = game1;
     if (debug) {
       console.log('GamePlay::construct()');
     }
+    this.moteur = new tronEngine(500, 500);
   }
 
   GamePlay.prototype.preload = function() {
+    var spriteD, spriteG;
     if (debug) {
       console.log('GamePlay::preload()');
     }
-    game.load.image('fleche_gauche', 'assets/fleche_gauche.png');
-    return game.load.image('fleche_droite', 'assets/fleche_droite.png');
+    spriteG = game.load.image('fleche_gauche', 'assets/fleche_gauche.png');
+    return spriteD = game.load.image('fleche_droite', 'assets/fleche_droite.png');
   };
 
   GamePlay.prototype.create = function() {
-    var moteur;
     if (debug) {
-      console.log('GamePlay::create()');
+      return console.log('GamePlay::create()');
     }
-    moteur = new tronEngine();
+
+    /*  Enables all kind of input actions on this image (click, etc)
     spriteG.inputEnabled = true;
     spriteG.events.onInputDown.add(listenerBoutonG, this);
+    
+     *  Enables all kind of input actions on this image (click, etc)
     spriteD.inputEnabled = true;
-    return spriteD.events.onInputDown.add(listenerBoutonD, this);
+    spriteD.events.onInputDown.add(listenerBoutonD, this);
+     */
   };
 
   return GamePlay;
@@ -41,14 +52,17 @@ listenerBoutonD = function() {
   console.log("bonton droit");
   return {
     update: function() {
-      var spriteD, spriteG;
       if (debug) {
         console.log('GamePlay::update()');
       }
-      spriteG = game.add.sprite(0, 0, 'fleche_gauche');
-      spriteG.scale.setTo(0.2, 0.2);
-      spriteD = game.add.sprite(50, 0, 'fleche_droite');
-      return spriteD.scale.setTo(0.2, 0.2);
+      return this.moteur.nextStep();
+
+      /*
+      spriteG = game.add.sprite 0, 0, 'fleche_gauche'
+      spriteG.scale.setTo 0.2, 0.2
+      spriteD = game.add.sprite 50, 0, 'fleche_droite'
+      spriteD.scale.setTo 0.2, 0.2
+       */
     }
   };
 };

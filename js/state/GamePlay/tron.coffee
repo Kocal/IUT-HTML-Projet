@@ -43,10 +43,9 @@ class tronEngine
     do @player3.avance
     do @player4.avance
 
-    console.log @player1.posX+" "+@player1.posY
+    console.log @player1.posX+" "+@player1.posY if debug
 
 
-tronEngine1 = new tronEngine 300, 300
 
-tronEngine1.nextStep()
+#tronEngine1.nextStep()
 
