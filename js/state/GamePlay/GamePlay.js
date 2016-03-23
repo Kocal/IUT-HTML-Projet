@@ -4,6 +4,14 @@ var GamePlay;
 GamePlay = (function() {
   GamePlay.prototype.moteur = null;
 
+  GamePlay.prototype.spriteMoto1 = null;
+
+  GamePlay.prototype.spriteMoto2 = null;
+
+  GamePlay.prototype.spriteMoto3 = null;
+
+  GamePlay.prototype.spriteMoto4 = null;
+
   GamePlay.prototype.spriteG = null;
 
   GamePlay.prototype.spriteD = null;
@@ -21,13 +29,20 @@ GamePlay = (function() {
       console.log('GamePlay::preload()');
     }
     game.load.image('fleche_gauche', 'assets/fleche_gauche.png');
-    return game.load.image('fleche_droite', 'assets/fleche_droite.png');
+    game.load.image('fleche_droite', 'assets/fleche_droite.png');
+    game.load.image('moto1', 'assets/bike.png');
+    game.load.image('moto2', 'assets/bike.png');
+    game.load.image('moto3', 'assets/bike.png');
+    return game.load.image('moto4', 'assets/bike.png');
   };
 
   GamePlay.prototype.create = function() {
     if (debug) {
       console.log('GamePlay::create()');
     }
+    this.spriteMoto1 = game.add.sprite(this.moteur.player1.posX, this.moteur.player1.posY, 'moto1');
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.enable([this.spriteMoto1]);
     this.spriteG = game.add.sprite(0, 0, 'fleche_gauche');
     this.spriteG.scale.setTo(0.2, 0.2);
     this.spriteD = game.add.sprite(50, 0, 'fleche_droite');
@@ -56,7 +71,9 @@ GamePlay = (function() {
     if (debug) {
       console.log('GamePlay::update()');
     }
-    return this.moteur.nextStep();
+    this.moteur.nextStep();
+    this.spriteMoto1.body.velocity.x = this.moteur.player1.getVelocityX();
+    return this.spriteMoto1.body.velocity.y = this.moteur.player1.getVelocityY();
   };
 
   return GamePlay;

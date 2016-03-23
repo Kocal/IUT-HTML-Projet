@@ -49,6 +49,26 @@ tronBike = (function() {
     }
   };
 
+  tronBike.prototype.getVelocityX = function() {
+    if (this.direction === 3) {
+      return -100;
+    }
+    if (this.direction === 1) {
+      return 100;
+    }
+    return 0;
+  };
+
+  tronBike.prototype.getVelocityY = function() {
+    if (this.direction === 0) {
+      return -100;
+    }
+    if (this.direction === 2) {
+      return 100;
+    }
+    return 0;
+  };
+
   return tronBike;
 
 })();

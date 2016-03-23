@@ -1,8 +1,10 @@
 
+
 class tronBike
   posX: 0
   posY: 0
   direction: 0
+
 
   constructor: (posX, posY, direction) ->
     @posX = posX
@@ -24,6 +26,16 @@ class tronBike
     @direction--
     @direction = 3 if @direction == -1
     console.log 'tourne gauche' if debug
+
+  getVelocityX: () ->
+    return -100 if @direction == 3
+    return 100 if @direction == 1
+    return 0
+
+  getVelocityY: () ->
+    return -100 if @direction == 0
+    return 100 if @direction == 2
+    return 0
 
 class tronEngine
   player1: 0
