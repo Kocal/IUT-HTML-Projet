@@ -11,15 +11,16 @@ GameTitle = (function() {
 
   GameTitle.prototype.preload = function() {
     if (debug) {
-      return console.log('GameTitle::preload()');
+      console.log('GameTitle::preload()');
     }
+    return this.game.load.image('buttonPlay', '/assets/img/buttonPlay.png');
   };
 
   GameTitle.prototype.create = function() {
     if (debug) {
       console.log('GameTitle::create()');
     }
-    this.buttonPlay = this.game.add.button(this.game.world.centerX, this.game.world.centerY, 'button', this.onButtonPlayClick, this, 0, 1, 2);
+    this.buttonPlay = this.game.add.button(this.game.world.centerX, this.game.world.centerY, 'buttonPlay', this.onButtonPlayClick, this, 0, 1, 2);
     return this.buttonPlay.anchor.setTo(0.5, 0.5);
   };
 
