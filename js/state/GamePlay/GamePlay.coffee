@@ -33,19 +33,15 @@ class GamePlay
 
 
   listenerBoutonG: () ->
-    console.log "bonton gauche"
+    console.log "bonton gauche" if debug
+    @moteur.player1.tourneGauche()
 
   listenerBoutonD: () ->
-    console.log "bonton droit"
+    console.log "bonton droit" if debug
+    @moteur.player1.tourneDroite()
 
   update: ->
     console.log 'GamePlay::update()' if debug
 
     @moteur.nextStep()
 
-    ###
-    spriteG = game.add.sprite 0, 0, 'fleche_gauche'
-    spriteG.scale.setTo 0.2, 0.2
-    spriteD = game.add.sprite 50, 0, 'fleche_droite'
-    spriteD.scale.setTo 0.2, 0.2
-    ###

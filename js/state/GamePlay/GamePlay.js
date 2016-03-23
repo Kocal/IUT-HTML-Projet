@@ -39,11 +39,17 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.listenerBoutonG = function() {
-    return console.log("bonton gauche");
+    if (debug) {
+      console.log("bonton gauche");
+    }
+    return this.moteur.player1.tourneGauche();
   };
 
   GamePlay.prototype.listenerBoutonD = function() {
-    return console.log("bonton droit");
+    if (debug) {
+      console.log("bonton droit");
+    }
+    return this.moteur.player1.tourneDroite();
   };
 
   GamePlay.prototype.update = function() {
@@ -51,13 +57,6 @@ GamePlay = (function() {
       console.log('GamePlay::update()');
     }
     return this.moteur.nextStep();
-
-    /*
-    spriteG = game.add.sprite 0, 0, 'fleche_gauche'
-    spriteG.scale.setTo 0.2, 0.2
-    spriteD = game.add.sprite 50, 0, 'fleche_droite'
-    spriteD.scale.setTo 0.2, 0.2
-     */
   };
 
   return GamePlay;

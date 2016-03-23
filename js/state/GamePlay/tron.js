@@ -32,14 +32,20 @@ tronBike = (function() {
   tronBike.prototype.tourneDroite = function() {
     this.direction++;
     if (this.direction === 4) {
-      return this.direction = 0;
+      this.direction = 0;
+    }
+    if (debug) {
+      return console.log('tourne droite');
     }
   };
 
   tronBike.prototype.tourneGauche = function() {
     this.direction--;
     if (this.direction === -1) {
-      return this.direction = 3;
+      this.direction = 3;
+    }
+    if (debug) {
+      return console.log('tourne gauche');
     }
   };
 

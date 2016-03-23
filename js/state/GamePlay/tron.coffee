@@ -18,10 +18,12 @@ class tronBike
   tourneDroite: () ->
     @direction++
     @direction = 0 if @direction == 4
+    console.log 'tourne droite' if debug
 
   tourneGauche: () ->
     @direction--
     @direction = 3 if @direction == -1
+    console.log 'tourne gauche' if debug
 
 class tronEngine
   player1: 0
@@ -44,8 +46,3 @@ class tronEngine
     do @player4.avance
 
     console.log @player1.posX+" "+@player1.posY if debug
-
-
-
-#tronEngine1.nextStep()
-
