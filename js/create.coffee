@@ -9,6 +9,9 @@ create = () ->
     spriteD = game.add.sprite 50, 0, 'fleche_droite'
     spriteD.scale.setTo 0.2, 0.2
 
+
+    moteur = new tronEngine()
+
     #  Enables all kind of input actions on this image (click, etc)
     spriteG.inputEnabled = true;
     spriteG.events.onInputDown.add(listenerBoutonG, this);

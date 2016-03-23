@@ -49,9 +49,4 @@ class tronEngine
 tronEngine1 = new tronEngine 300, 300
 
 tronEngine1.nextStep()
-tronEngine1.nextStep()
-tronEngine1.nextStep()
-tronEngine1.nextStep()
-tronEngine1.nextStep()
-tronEngine1.nextStep()
 

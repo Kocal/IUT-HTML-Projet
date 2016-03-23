@@ -2,7 +2,7 @@
 var create, listenerBoutonD, listenerBoutonG, toggleFullScreen;
 
 create = function() {
-  var spriteD, spriteG;
+  var moteur, spriteD, spriteG;
   console.log("create");
   game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
   game.input.onDown.add(toggleFullScreen, this);
@@ -10,6 +10,7 @@ create = function() {
   spriteG.scale.setTo(0.2, 0.2);
   spriteD = game.add.sprite(50, 0, 'fleche_droite');
   spriteD.scale.setTo(0.2, 0.2);
+  moteur = new tronEngine();
   spriteG.inputEnabled = true;
   spriteG.events.onInputDown.add(listenerBoutonG, this);
   spriteD.inputEnabled = true;
