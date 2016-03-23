@@ -17,14 +17,20 @@ GameTitle = (function() {
 
   GameTitle.prototype.create = function() {
     if (debug) {
-      return console.log('GameTitle::create()');
+      console.log('GameTitle::create()');
     }
+    this.buttonPlay = this.game.add.button(this.game.world.centerX, this.game.world.centerY, 'button', this.onButtonPlayClick, this, 0, 1, 2);
+    return this.buttonPlay.anchor.setTo(0.5, 0.5);
   };
 
   GameTitle.prototype.update = function() {
     if (debug) {
       return console.log('GameTitle::update()');
     }
+  };
+
+  GameTitle.prototype.onButtonPlayClick = function() {
+    return console.log('Jouer');
   };
 
   return GameTitle;

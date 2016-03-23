@@ -9,6 +9,14 @@ class GameTitle
   create: ->
     console.log 'GameTitle::create()' if debug
 
+    @buttonPlay = @game.add.button @game.world.centerX, @game.world.centerY, 'button', @onButtonPlayClick, @, 0, 1, 2
+    @buttonPlay.anchor.setTo 0.5, 0.5
+
   update: ->
     console.log 'GameTitle::update()' if debug
-    
+
+#    @buttonPlay.x = @game.world.centerX
+#    @buttonPlay.y = @game.world.centerY
+
+  onButtonPlayClick: ->
+    console.log 'Jouer'
