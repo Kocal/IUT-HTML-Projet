@@ -2,26 +2,147 @@
 var GamePlay;
 
 GamePlay = (function() {
+  var Joueur;
+
   GamePlay.prototype.moteur = null;
 
-  GamePlay.prototype.spriteMoto1 = null;
+  Joueur = (function() {
+    function Joueur() {}
 
-  GamePlay.prototype.spriteMoto2 = null;
+    Joueur.prototype.spriteMoto = null;
 
-  GamePlay.prototype.spriteMoto3 = null;
+    Joueur.prototype.lastWall = null;
 
-  GamePlay.prototype.spriteMoto4 = null;
+    Joueur.prototype.lastWallPosition = null;
+
+    Joueur.prototype.bmd = null;
+
+    Joueur.prototype.color = '#ff0000';
+
+    return Joueur;
+
+  })();
+
+  GamePlay.prototype.joueur1 = Joueur;
+
+  GamePlay.prototype.joueur2 = Joueur;
+
+  GamePlay.prototype.joueur3 = Joueur;
+
+  GamePlay.prototype.joueur4 = Joueur;
 
   GamePlay.prototype.spriteG = null;
 
   GamePlay.prototype.spriteD = null;
+
+  GamePlay.prototype.globalVelocity = 100;
+
+  GamePlay.prototype.epaisseurMur = 10;
+
+  GamePlay.prototype.prolongerMur = function(joueur) {
+    if (joueur.lastWall) {
+      if (joueur.spriteMoto.body.velocity.x > 0) {
+        joueur.lastWall.width = joueur.spriteMoto.x - joueur.lastWallPosition;
+        return console.log(joueur.lastWall.width);
+      } else if (joueur.spriteMoto.body.velocity.x < 0) {
+        return joueur.lastWall.width = joueur.lastWallPosition - (joueur.spriteMoto.x + joueur.spriteMoto.width);
+      } else if (joueur.spriteMoto.body.velocity.y > 0) {
+        return joueur.lastWall.height = joueur.spriteMoto.y - joueur.lastWall.y;
+      } else if (joueur.spriteMoto.body.velocity.y < 0) {
+        return joueur.lastWall.height = joueur.lastWallPosition - (joueur.spriteMoto.y + joueur.lastWall.y);
+      }
+    }
+  };
+
+  GamePlay.prototype.moveUp = function(joueur, bmd) {
+    joueur.spriteMoto.body.velocity.y = -this.globalVelocity;
+    joueur.spriteMoto.body.velocity.x = 0;
+    bmd.ctx.rect(0, 0, this.epaisseurMur, 5);
+    bmd.ctx.fill();
+    joueur.lastWall = game.add.sprite(joueur.spriteMoto.x + joueur.spriteMoto.width / 2, joueur.spriteMoto.y + joueur.spriteMoto.height, bmd);
+    game.physics.arcade.enable([joueur.lastWall]);
+    joueur.lastWall.body.velocity.y = -this.globalVelocity;
+    return joueur.lastWallPosition = joueur.spriteMoto.y + joueur.spriteMoto.height;
+  };
+
+  GamePlay.prototype.moveDown = function(joueur, bmd) {
+    joueur.spriteMoto.body.velocity.y = this.globalVelocity;
+    joueur.spriteMoto.body.velocity.x = 0;
+    bmd.ctx.rect(0, 0, this.epaisseurMur, 5);
+    bmd.ctx.fill();
+    joueur.lastWall = game.add.sprite(joueur.spriteMoto.x + joueur.spriteMoto.width / 2, joueur.spriteMoto.y, bmd);
+    return joueur.lastWallPosition = joueur.spriteMoto.y;
+  };
+
+  GamePlay.prototype.moveLeft = function(joueur, bmd) {
+    joueur.spriteMoto.body.velocity.x = -this.globalVelocity;
+    joueur.spriteMoto.body.velocity.y = 0;
+    bmd.ctx.rect(0, 0, 5, this.epaisseurMur);
+    bmd.ctx.fill();
+    joueur.lastWall = game.add.sprite(joueur.spriteMoto.x + joueur.spriteMoto.width, joueur.spriteMoto.y + joueur.spriteMoto.width / 2, bmd);
+    game.physics.arcade.enable([joueur.lastWall]);
+    joueur.lastWall.body.velocity.x = -this.globalVelocity;
+    return joueur.lastWallPosition = joueur.spriteMoto.x + joueur.spriteMoto.width;
+  };
+
+  GamePlay.prototype.moveRight = function(joueur, bmd) {
+    joueur.spriteMoto.body.velocity.x = this.globalVelocity;
+    joueur.spriteMoto.body.velocity.y = 0;
+    bmd.ctx.rect(0, 0, 5, this.epaisseurMur);
+    bmd.ctx.fill();
+    joueur.lastWall = game.add.sprite(joueur.spriteMoto.x, joueur.spriteMoto.y + joueur.spriteMoto.width / 2, bmd);
+    return joueur.lastWallPosition = joueur.spriteMoto.x;
+  };
+
+  GamePlay.prototype.tourneDroite = function(joueur, bmd) {
+    if (joueur.spriteMoto.body.velocity.x > 0) {
+      this.moveDown(joueur, bmd);
+    } else if (joueur.spriteMoto.body.velocity.x < 0) {
+      this.moveUp(joueur, bmd);
+    } else if (joueur.spriteMoto.body.velocity.y > 0) {
+      this.moveLeft(joueur, bmd);
+    } else if (joueur.spriteMoto.body.velocity.y < 0) {
+      this.moveRight(joueur, bmd);
+    }
+    if (debug) {
+      return console.log('tourne droite');
+    }
+  };
+
+  GamePlay.prototype.tourneGauche = function(joueur, bmd) {
+    if (joueur.spriteMoto.body.velocity.x > 0) {
+      this.moveUp(joueur, bmd);
+    } else if (joueur.spriteMoto.body.velocity.x < 0) {
+      this.moveDown(joueur, bmd);
+    } else if (joueur.spriteMoto.body.velocity.y > 0) {
+      this.moveRight(joueur, bmd);
+    } else if (joueur.spriteMoto.body.velocity.y < 0) {
+      this.moveLeft(joueur, bmd);
+    }
+    if (debug) {
+      return console.log('tourne gauche');
+    }
+  };
+
+  GamePlay.prototype.tourne = function(joueur, direction) {
+    if (joueur.lastWall && joueur.lastWall.body) {
+      joueur.lastWall.body.moves = false;
+    }
+    joueur.bmd = game.add.bitmapData();
+    joueur.bmd.ctx.beginPath();
+    joueur.bmd.ctx.fillStyle = '#ff0000';
+    if (direction === "droite") {
+      return this.tourneDroite(joueur, joueur.bmd);
+    } else if (direction === "gauche") {
+      return this.tourneGauche(joueur, joueur.bmd);
+    }
+  };
 
   function GamePlay(game1) {
     this.game = game1;
     if (debug) {
       console.log('GamePlay::construct()');
     }
-    this.moteur = new tronEngine(500, 500);
   }
 
   GamePlay.prototype.preload = function() {
@@ -40,9 +161,12 @@ GamePlay = (function() {
     if (debug) {
       console.log('GamePlay::create()');
     }
-    this.spriteMoto1 = game.add.sprite(this.moteur.player1.posX, this.moteur.player1.posY, 'moto1');
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.arcade.enable([this.spriteMoto1]);
+    game.time.advancedTiming = true;
+    game.stage.smoothed = false;
+    this.joueur1.spriteMoto = game.add.sprite(50, 50, 'moto1');
+    game.physics.arcade.enable([this.joueur1.spriteMoto]);
+    this.joueur1.spriteMoto.body.velocity.y = this.globalVelocity;
+    this.tourne(this.joueur1, "gauche");
     this.spriteG = game.add.sprite(0, 0, 'fleche_gauche');
     this.spriteG.scale.setTo(0.2, 0.2);
     this.spriteD = game.add.sprite(50, 0, 'fleche_droite');
@@ -57,23 +181,21 @@ GamePlay = (function() {
     if (debug) {
       console.log("bonton gauche");
     }
-    return this.moteur.player1.tourneGauche();
+    return this.tourne(this.joueur1, "gauche");
   };
 
   GamePlay.prototype.listenerBoutonD = function() {
     if (debug) {
       console.log("bonton droit");
     }
-    return this.moteur.player1.tourneDroite();
+    return this.tourne(this.joueur1, "droite");
   };
 
   GamePlay.prototype.update = function() {
     if (debug) {
       console.log('GamePlay::update()');
     }
-    this.moteur.nextStep();
-    this.spriteMoto1.body.velocity.x = this.moteur.player1.getVelocityX();
-    return this.spriteMoto1.body.velocity.y = this.moteur.player1.getVelocityY();
+    return this.prolongerMur(this.joueur1);
   };
 
   return GamePlay;
