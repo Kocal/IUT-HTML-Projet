@@ -4,8 +4,6 @@ var GamePlay;
 GamePlay = (function() {
   var Joueur;
 
-  GamePlay.prototype.moteur = null;
-
   Joueur = (function() {
     function Joueur() {}
 
@@ -14,8 +12,6 @@ GamePlay = (function() {
     Joueur.prototype.lastWall = null;
 
     Joueur.prototype.lastWallPosition = null;
-
-    Joueur.prototype.bmd = null;
 
     Joueur.prototype.color = '#ff0000';
 
@@ -39,17 +35,18 @@ GamePlay = (function() {
 
   GamePlay.prototype.epaisseurMur = 10;
 
+  GamePlay.prototype.listeSpriteMur = [];
+
   GamePlay.prototype.prolongerMur = function(joueur) {
     if (joueur.lastWall) {
       if (joueur.spriteMoto.body.velocity.x > 0) {
-        joueur.lastWall.width = joueur.spriteMoto.x - joueur.lastWallPosition;
-        return console.log(joueur.lastWall.width);
+        return joueur.lastWall.width = joueur.spriteMoto.x - joueur.lastWallPosition;
       } else if (joueur.spriteMoto.body.velocity.x < 0) {
         return joueur.lastWall.width = joueur.lastWallPosition - (joueur.spriteMoto.x + joueur.spriteMoto.width);
       } else if (joueur.spriteMoto.body.velocity.y > 0) {
         return joueur.lastWall.height = joueur.spriteMoto.y - joueur.lastWall.y;
       } else if (joueur.spriteMoto.body.velocity.y < 0) {
-        return joueur.lastWall.height = joueur.lastWallPosition - (joueur.spriteMoto.y + joueur.lastWall.y);
+        return joueur.lastWall.height = joueur.lastWallPosition - (joueur.spriteMoto.y + joueur.spriteMoto.height);
       }
     }
   };
@@ -57,41 +54,43 @@ GamePlay = (function() {
   GamePlay.prototype.moveUp = function(joueur, bmd) {
     joueur.spriteMoto.body.velocity.y = -this.globalVelocity;
     joueur.spriteMoto.body.velocity.x = 0;
-    bmd.ctx.rect(0, 0, this.epaisseurMur, 5);
+    bmd.ctx.rect(0, 0, this.epaisseurMur, 1000);
     bmd.ctx.fill();
-    joueur.lastWall = game.add.sprite(joueur.spriteMoto.x + joueur.spriteMoto.width / 2, joueur.spriteMoto.y + joueur.spriteMoto.height, bmd);
-    game.physics.arcade.enable([joueur.lastWall]);
+    joueur.lastWall = this.listeSpriteMur.create(joueur.spriteMoto.x + joueur.spriteMoto.width / 2 - this.epaisseurMur / 2, joueur.spriteMoto.y + joueur.spriteMoto.height, bmd);
+    game.physics.enable(joueur.lastWall, Phaser.Physics.ARCADE);
     joueur.lastWall.body.velocity.y = -this.globalVelocity;
-    return joueur.lastWallPosition = joueur.spriteMoto.y + joueur.spriteMoto.height;
+    return joueur.lastWallPosition = joueur.lastWall.y;
   };
 
   GamePlay.prototype.moveDown = function(joueur, bmd) {
     joueur.spriteMoto.body.velocity.y = this.globalVelocity;
     joueur.spriteMoto.body.velocity.x = 0;
-    bmd.ctx.rect(0, 0, this.epaisseurMur, 5);
+    bmd.ctx.rect(0, 0, this.epaisseurMur, 1000);
     bmd.ctx.fill();
-    joueur.lastWall = game.add.sprite(joueur.spriteMoto.x + joueur.spriteMoto.width / 2, joueur.spriteMoto.y, bmd);
-    return joueur.lastWallPosition = joueur.spriteMoto.y;
+    joueur.lastWall = this.listeSpriteMur.create(joueur.spriteMoto.x + joueur.spriteMoto.width / 2 - this.epaisseurMur / 2, joueur.spriteMoto.y, bmd);
+    game.physics.enable(joueur.lastWall, Phaser.Physics.ARCADE);
+    return joueur.lastWallPosition = joueur.lastWall.y;
   };
 
   GamePlay.prototype.moveLeft = function(joueur, bmd) {
     joueur.spriteMoto.body.velocity.x = -this.globalVelocity;
     joueur.spriteMoto.body.velocity.y = 0;
-    bmd.ctx.rect(0, 0, 5, this.epaisseurMur);
+    bmd.ctx.rect(0, 0, 1000, this.epaisseurMur);
     bmd.ctx.fill();
-    joueur.lastWall = game.add.sprite(joueur.spriteMoto.x + joueur.spriteMoto.width, joueur.spriteMoto.y + joueur.spriteMoto.width / 2, bmd);
-    game.physics.arcade.enable([joueur.lastWall]);
+    joueur.lastWall = this.listeSpriteMur.create(joueur.spriteMoto.x + joueur.spriteMoto.width, joueur.spriteMoto.y + joueur.spriteMoto.width / 2 - this.epaisseurMur / 2, bmd);
+    game.physics.enable(joueur.lastWall, Phaser.Physics.ARCADE);
     joueur.lastWall.body.velocity.x = -this.globalVelocity;
-    return joueur.lastWallPosition = joueur.spriteMoto.x + joueur.spriteMoto.width;
+    return joueur.lastWallPosition = joueur.lastWall.x;
   };
 
   GamePlay.prototype.moveRight = function(joueur, bmd) {
     joueur.spriteMoto.body.velocity.x = this.globalVelocity;
     joueur.spriteMoto.body.velocity.y = 0;
-    bmd.ctx.rect(0, 0, 5, this.epaisseurMur);
+    bmd.ctx.rect(0, 0, 1000, this.epaisseurMur);
     bmd.ctx.fill();
-    joueur.lastWall = game.add.sprite(joueur.spriteMoto.x, joueur.spriteMoto.y + joueur.spriteMoto.width / 2, bmd);
-    return joueur.lastWallPosition = joueur.spriteMoto.x;
+    joueur.lastWall = this.listeSpriteMur.create(joueur.spriteMoto.x, joueur.spriteMoto.y + joueur.spriteMoto.width / 2 - this.epaisseurMur / 2, bmd);
+    game.physics.enable(joueur.lastWall, Phaser.Physics.ARCADE);
+    return joueur.lastWallPosition = joueur.lastWall.x;
   };
 
   GamePlay.prototype.tourneDroite = function(joueur, bmd) {
@@ -138,6 +137,20 @@ GamePlay = (function() {
     }
   };
 
+  GamePlay.prototype.verifCollide = function(player, wall) {
+    if (player === this.joueur1.spriteMoto) {
+      if (wall !== this.joueur1.lastWall) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  GamePlay.prototype.explode = function() {
+    return console.log("boum!");
+  };
+
   function GamePlay(game1) {
     this.game = game1;
     if (debug) {
@@ -158,13 +171,23 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.create = function() {
+    var bmd;
     if (debug) {
       console.log('GamePlay::create()');
     }
     game.time.advancedTiming = true;
     game.stage.smoothed = false;
-    this.joueur1.spriteMoto = game.add.sprite(50, 50, 'moto1');
-    game.physics.arcade.enable([this.joueur1.spriteMoto]);
+    bmd = game.add.bitmapData();
+    bmd.ctx.beginPath();
+    bmd.ctx.fillStyle = '#0000FF';
+    bmd.ctx.rect(0, 0, 1000, 1000);
+    bmd.ctx.fill();
+    this.joueur1.spriteMoto = game.add.sprite(50, 50, bmd);
+    this.joueur1.spriteMoto.width = this.epaisseurMur;
+    this.joueur1.spriteMoto.height = this.epaisseurMur;
+    this.listeSpriteMur = game.add.group();
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.enable(this.joueur1.spriteMoto);
     this.joueur1.spriteMoto.body.velocity.y = this.globalVelocity;
     this.tourne(this.joueur1, "gauche");
     this.spriteG = game.add.sprite(0, 0, 'fleche_gauche');
@@ -195,7 +218,8 @@ GamePlay = (function() {
     if (debug) {
       console.log('GamePlay::update()');
     }
-    return this.prolongerMur(this.joueur1);
+    this.prolongerMur(this.joueur1);
+    return game.physics.arcade.collide(this.joueur1.spriteMoto, this.listeSpriteMur, this.explode, this.verifCollide, this);
   };
 
   return GamePlay;
