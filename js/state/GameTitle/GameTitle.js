@@ -13,6 +13,7 @@ GameTitle = (function() {
     if (debug) {
       console.log('GameTitle::preload()');
     }
+    this.game.load.image('logo', '/assets/img/logo.png');
     return this.game.load.image('buttonPlay', '/assets/img/buttonPlay.png');
   };
 
@@ -20,8 +21,10 @@ GameTitle = (function() {
     if (debug) {
       console.log('GameTitle::create()');
     }
-    this.buttonPlay = this.game.add.button(this.game.world.centerX, this.game.world.centerY, 'buttonPlay', this.onButtonPlayClick, this, 0, 1, 2);
-    return this.buttonPlay.anchor.setTo(0.5, 0.5);
+    this.sLogo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
+    this.sLogo.anchor.setTo(0.5, 1);
+    this.sButtonPlay = this.game.add.button(this.game.world.centerX, this.sLogo.y, 'buttonPlay', this.onButtonPlayClick, this, 0, 1, 2);
+    return this.sButtonPlay.anchor.setTo(0.5, -1);
   };
 
   GameTitle.prototype.update = function() {
