@@ -24,12 +24,18 @@ GameTitle = (function() {
     if (debug) {
       console.log('GameTitle::create()');
     }
+    this.randomGenerator = new Phaser.RandomDataGenerator;
     this.texture = this.game.add.renderTexture(this.game.world.width, this.game.world.height, 'mousetrail');
     this.game.add.sprite(0, 0, this.texture);
     this.traces = this.game.make.group();
-    for (i = j = 0; j <= 10; i = ++j) {
+    for (i = j = 0; j <= 5; i = ++j) {
       this.traces.add(this._initATrace());
     }
+    this.game.time.events.loop(5000, (function(_this) {
+      return function() {
+        return _this.traces.add(_this._initATrace());
+      };
+    })(this), this);
     this.sLogo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
     this.sLogo.anchor.setTo(0.5, 1);
     this.sButtonPlay = this.game.add.button(this.game.world.centerX, this.sLogo.y, 'buttonPlay', this.onButtonPlayClick, this, 0, 1, 2);
@@ -58,15 +64,14 @@ GameTitle = (function() {
   };
 
   GameTitle.prototype._initATrace = function() {
-    var isOrange, trace, velocity, x, y;
+    var isOrange, trace, x, y;
     isOrange = Math.random() >= 0.5;
-    velocity = Math.random() * 50 + 10;
     x = Math.random() * this.game.width;
-    y = 0;
+    y = Math.random() * -150;
     trace = this.game.make.sprite(x, y, isOrange ? 'orangeTrace' : 'blueTrace');
     this.game.physics.enable(trace, Phaser.Physics.ARCADE);
     trace.anchor.setTo(0.5);
-    trace.body.velocity.y = velocity;
+    trace.body.velocity.y = 30;
     return trace;
   };
 

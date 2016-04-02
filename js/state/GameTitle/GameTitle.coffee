@@ -16,13 +16,21 @@ class GameTitle
   create: ->
     console.log 'GameTitle::create()' if debug
 
+    @randomGenerator = new Phaser.RandomDataGenerator
+
     # Ajout de la texture qui accueillera les tracés lumineux
     @texture = @game.add.renderTexture @game.world.width, @game.world.height, 'mousetrail'
     @game.add.sprite 0, 0, @texture
 
     # Génération des tracés
     @traces = @game.make.group()
-    @traces.add @_initATrace() for i in [0..10]
+    @traces.add @_initATrace() for i in [0..5]
+
+    # On ajout un tracé supplémentaire toutes les 5 secondes
+    @game.time.events.loop 5000, =>
+      @traces.add @_initATrace()
+    , @
+
 
     # Ajout du logo
     @sLogo = @game.add.sprite @game.world.centerX, @game.world.centerY, 'logo'
@@ -55,14 +63,13 @@ class GameTitle
 
   _initATrace: ->
     isOrange = Math.random() >= 0.5
-    velocity = Math.random() * 50 + 10
-    x = Math.random() * @game.width;
-    y = 0;
+    x = Math.random() * @game.width
+    y = Math.random() * -150
 
     trace = @game.make.sprite x, y, if isOrange then 'orangeTrace' else 'blueTrace'
     @game.physics.enable trace, Phaser.Physics.ARCADE
 
     trace.anchor.setTo 0.5
-    trace.body.velocity.y = velocity
+    trace.body.velocity.y = 30
 
     return trace
