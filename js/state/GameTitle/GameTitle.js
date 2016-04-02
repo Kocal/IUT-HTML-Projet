@@ -19,22 +19,20 @@ GameTitle = (function() {
   };
 
   GameTitle.prototype.create = function() {
-    var i, j, results;
+    var i, j;
     if (debug) {
       console.log('GameTitle::create()');
     }
     this.texture = this.game.add.renderTexture(this.game.world.width, this.game.world.height, 'mousetrail');
     this.game.add.sprite(0, 0, this.texture);
+    this.traces = this.game.make.group();
+    for (i = j = 0; j <= 10; i = ++j) {
+      this.traces.add(this._initATrace());
+    }
     this.sLogo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
     this.sLogo.anchor.setTo(0.5, 1);
     this.sButtonPlay = this.game.add.button(this.game.world.centerX, this.sLogo.y, 'buttonPlay', this.onButtonPlayClick, this, 0, 1, 2);
-    this.sButtonPlay.anchor.setTo(0.5, -1);
-    this.traces = this.game.make.group();
-    results = [];
-    for (i = j = 0; j <= 6; i = ++j) {
-      results.push(this.traces.add(this._initATrace()));
-    }
-    return results;
+    return this.sButtonPlay.anchor.setTo(0.5, -1);
   };
 
   GameTitle.prototype.update = function() {
@@ -46,34 +44,31 @@ GameTitle = (function() {
     results = [];
     for (j = 0, len = ref.length; j < len; j++) {
       trace = ref[j];
-      results.push(this.texture.renderXY(trace, trace.x, trace.y));
+      this.texture.renderXY(trace, trace.x, trace.y);
+      if (trace.x >= this.game.width || trace.y >= this.game.height) {
+        trace.x = Math.random() * this.game.width;
+        results.push(trace.y = 0);
+      } else {
+        results.push(void 0);
+      }
     }
     return results;
   };
 
   GameTitle.prototype.onButtonPlayClick = function() {
-    return console.log('Jouer');
+    console.log('Jouer');
+    return this.game.state.start('GamePlay');
   };
 
   GameTitle.prototype._initATrace = function() {
-    var angle, isHorizontal, ref, trace, velocity, x, y;
-    isHorizontal = Math.random() >= 0.5;
+    var trace, velocity, x, y;
     velocity = Math.random() * 50 + 10;
     x = Math.random() * this.game.width;
     y = 0;
-    trace = this.game.make.sprite(0, 0, 'orangeTrace');
+    trace = this.game.make.sprite(x, y, 'orangeTrace');
     this.game.physics.enable(trace, Phaser.Physics.ARCADE);
-    if (isHorizontal) {
-      ref = [y, x], x = ref[0], y = ref[1];
-      trace.body.velocity.x = velocity;
-      angle = 270;
-    } else {
-      trace.body.velocity.y = velocity;
-      angle = 0;
-    }
-    trace.angle = angle;
-    trace.x = x;
-    trace.y = y;
+    trace.anchor.setTo(0.5);
+    trace.body.velocity.y = velocity;
     return trace;
   };
 
