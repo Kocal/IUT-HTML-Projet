@@ -16,6 +16,7 @@ GameTitle = (function() {
     this.game.load.image('logo', '/assets/img/logo.png');
     this.game.load.image('buttonPlay', '/assets/img/buttonPlay.png');
     this.game.load.image('orangeTrace', '/assets/img/orangeTrace.png');
+    this.game.load.image('blueTrace', '/assets/img/blueTrace.png');
   };
 
   GameTitle.prototype.create = function() {
@@ -57,11 +58,12 @@ GameTitle = (function() {
   };
 
   GameTitle.prototype._initATrace = function() {
-    var trace, velocity, x, y;
+    var isOrange, trace, velocity, x, y;
+    isOrange = Math.random() >= 0.5;
     velocity = Math.random() * 50 + 10;
     x = Math.random() * this.game.width;
     y = 0;
-    trace = this.game.make.sprite(x, y, 'orangeTrace');
+    trace = this.game.make.sprite(x, y, isOrange ? 'orangeTrace' : 'blueTrace');
     this.game.physics.enable(trace, Phaser.Physics.ARCADE);
     trace.anchor.setTo(0.5);
     trace.body.velocity.y = velocity;

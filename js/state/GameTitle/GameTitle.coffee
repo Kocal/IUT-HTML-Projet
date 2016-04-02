@@ -3,11 +3,13 @@ class GameTitle
   constructor: (@game) ->
     console.log 'GameTitle::constructor()' if debug
 
+
   preload: ->
     console.log 'GameTitle::preload()' if debug
     @game.load.image 'logo', '/assets/img/logo.png'
     @game.load.image 'buttonPlay', '/assets/img/buttonPlay.png'
     @game.load.image 'orangeTrace', '/assets/img/orangeTrace.png'
+    @game.load.image 'blueTrace', '/assets/img/blueTrace.png'
 
     return
 
@@ -20,9 +22,7 @@ class GameTitle
 
     # Génération des tracés
     @traces = @game.make.group()
-
-    for i in [0..10]
-      @traces.add @_initATrace()
+    @traces.add @_initATrace() for i in [0..10]
 
     # Ajout du logo
     @sLogo = @game.add.sprite @game.world.centerX, @game.world.centerY, 'logo'
@@ -54,11 +54,12 @@ class GameTitle
     return
 
   _initATrace: ->
+    isOrange = Math.random() >= 0.5
     velocity = Math.random() * 50 + 10
     x = Math.random() * @game.width;
     y = 0;
 
-    trace = @game.make.sprite x, y, 'orangeTrace'
+    trace = @game.make.sprite x, y, if isOrange then 'orangeTrace' else 'blueTrace'
     @game.physics.enable trace, Phaser.Physics.ARCADE
 
     trace.anchor.setTo 0.5
