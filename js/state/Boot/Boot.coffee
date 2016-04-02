@@ -8,10 +8,4 @@ class Boot
 
   create: ->
     console.log 'Boot::create()' if debug
-
-    timer = @game.time.create()
-    timer.add 1000, ->
-      @game.state.start 'GameTitle'
-    , this
-
-    timer.start()
+    @game.state.start 'GameTitle'
