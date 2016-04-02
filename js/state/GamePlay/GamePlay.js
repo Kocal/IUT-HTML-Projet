@@ -2,152 +2,73 @@
 var GamePlay;
 
 GamePlay = (function() {
-  var Joueur;
+  GamePlay.prototype.joueur1 = null;
 
-  Joueur = (function() {
-    function Joueur() {}
+  GamePlay.prototype.joueur2 = null;
 
-    Joueur.prototype.spriteMoto = null;
+  GamePlay.prototype.joueur3 = null;
 
-    Joueur.prototype.lastWall = null;
-
-    Joueur.prototype.lastWallPosition = null;
-
-    Joueur.prototype.color = '#ff0000';
-
-    return Joueur;
-
-  })();
-
-  GamePlay.prototype.joueur1 = Joueur;
-
-  GamePlay.prototype.joueur2 = Joueur;
-
-  GamePlay.prototype.joueur3 = Joueur;
-
-  GamePlay.prototype.joueur4 = Joueur;
+  GamePlay.prototype.joueur4 = null;
 
   GamePlay.prototype.spriteG = null;
 
   GamePlay.prototype.spriteD = null;
 
+  GamePlay.prototype.bmd = null;
+
+  GamePlay.prototype.bmdtest = null;
+
   GamePlay.prototype.globalVelocity = 100;
 
   GamePlay.prototype.epaisseurMur = 10;
 
-  GamePlay.prototype.listeSpriteMur = [];
-
-  GamePlay.prototype.prolongerMur = function(joueur) {
-    if (joueur.lastWall) {
-      if (joueur.spriteMoto.body.velocity.x > 0) {
-        return joueur.lastWall.width = joueur.spriteMoto.x - joueur.lastWallPosition;
-      } else if (joueur.spriteMoto.body.velocity.x < 0) {
-        return joueur.lastWall.width = joueur.lastWallPosition - (joueur.spriteMoto.x + joueur.spriteMoto.width);
-      } else if (joueur.spriteMoto.body.velocity.y > 0) {
-        return joueur.lastWall.height = joueur.spriteMoto.y - joueur.lastWall.y;
-      } else if (joueur.spriteMoto.body.velocity.y < 0) {
-        return joueur.lastWall.height = joueur.lastWallPosition - (joueur.spriteMoto.y + joueur.spriteMoto.height);
-      }
-    }
-  };
-
-  GamePlay.prototype.moveUp = function(joueur, bmd) {
-    joueur.spriteMoto.body.velocity.y = -this.globalVelocity;
-    joueur.spriteMoto.body.velocity.x = 0;
-    bmd.ctx.rect(0, 0, this.epaisseurMur, 1000);
-    bmd.ctx.fill();
-    joueur.lastWall = this.listeSpriteMur.create(joueur.spriteMoto.x + joueur.spriteMoto.width / 2 - this.epaisseurMur / 2, joueur.spriteMoto.y + joueur.spriteMoto.height, bmd);
-    game.physics.enable(joueur.lastWall, Phaser.Physics.ARCADE);
-    joueur.lastWall.body.velocity.y = -this.globalVelocity;
-    return joueur.lastWallPosition = joueur.lastWall.y;
-  };
-
-  GamePlay.prototype.moveDown = function(joueur, bmd) {
-    joueur.spriteMoto.body.velocity.y = this.globalVelocity;
-    joueur.spriteMoto.body.velocity.x = 0;
-    bmd.ctx.rect(0, 0, this.epaisseurMur, 1000);
-    bmd.ctx.fill();
-    joueur.lastWall = this.listeSpriteMur.create(joueur.spriteMoto.x + joueur.spriteMoto.width / 2 - this.epaisseurMur / 2, joueur.spriteMoto.y, bmd);
-    game.physics.enable(joueur.lastWall, Phaser.Physics.ARCADE);
-    return joueur.lastWallPosition = joueur.lastWall.y;
-  };
-
-  GamePlay.prototype.moveLeft = function(joueur, bmd) {
-    joueur.spriteMoto.body.velocity.x = -this.globalVelocity;
-    joueur.spriteMoto.body.velocity.y = 0;
-    bmd.ctx.rect(0, 0, 1000, this.epaisseurMur);
-    bmd.ctx.fill();
-    joueur.lastWall = this.listeSpriteMur.create(joueur.spriteMoto.x + joueur.spriteMoto.width, joueur.spriteMoto.y + joueur.spriteMoto.width / 2 - this.epaisseurMur / 2, bmd);
-    game.physics.enable(joueur.lastWall, Phaser.Physics.ARCADE);
-    joueur.lastWall.body.velocity.x = -this.globalVelocity;
-    return joueur.lastWallPosition = joueur.lastWall.x;
-  };
-
-  GamePlay.prototype.moveRight = function(joueur, bmd) {
-    joueur.spriteMoto.body.velocity.x = this.globalVelocity;
-    joueur.spriteMoto.body.velocity.y = 0;
-    bmd.ctx.rect(0, 0, 1000, this.epaisseurMur);
-    bmd.ctx.fill();
-    joueur.lastWall = this.listeSpriteMur.create(joueur.spriteMoto.x, joueur.spriteMoto.y + joueur.spriteMoto.width / 2 - this.epaisseurMur / 2, bmd);
-    game.physics.enable(joueur.lastWall, Phaser.Physics.ARCADE);
-    return joueur.lastWallPosition = joueur.lastWall.x;
-  };
-
-  GamePlay.prototype.tourneDroite = function(joueur, bmd) {
-    if (joueur.spriteMoto.body.velocity.x > 0) {
-      this.moveDown(joueur, bmd);
-    } else if (joueur.spriteMoto.body.velocity.x < 0) {
-      this.moveUp(joueur, bmd);
-    } else if (joueur.spriteMoto.body.velocity.y > 0) {
-      this.moveLeft(joueur, bmd);
-    } else if (joueur.spriteMoto.body.velocity.y < 0) {
-      this.moveRight(joueur, bmd);
-    }
-    if (debug) {
-      return console.log('tourne droite');
-    }
-  };
-
-  GamePlay.prototype.tourneGauche = function(joueur, bmd) {
-    if (joueur.spriteMoto.body.velocity.x > 0) {
-      this.moveUp(joueur, bmd);
-    } else if (joueur.spriteMoto.body.velocity.x < 0) {
-      this.moveDown(joueur, bmd);
-    } else if (joueur.spriteMoto.body.velocity.y > 0) {
-      this.moveRight(joueur, bmd);
-    } else if (joueur.spriteMoto.body.velocity.y < 0) {
-      this.moveLeft(joueur, bmd);
-    }
-    if (debug) {
-      return console.log('tourne gauche');
-    }
-  };
+  GamePlay.prototype.epaisseurMoto = 1;
 
   GamePlay.prototype.tourne = function(joueur, direction) {
-    if (joueur.lastWall && joueur.lastWall.body) {
-      joueur.lastWall.body.moves = false;
-    }
-    joueur.bmd = game.add.bitmapData();
-    joueur.bmd.ctx.beginPath();
-    joueur.bmd.ctx.fillStyle = '#ff0000';
     if (direction === "droite") {
-      return this.tourneDroite(joueur, joueur.bmd);
+      joueur.angle += 90;
     } else if (direction === "gauche") {
-      return this.tourneGauche(joueur, joueur.bmd);
+      joueur.angle -= 90;
     }
+    return game.physics.arcade.velocityFromAngle(joueur.angle, this.globalVelocity, joueur.body.velocity);
   };
 
-  GamePlay.prototype.verifCollide = function(player, wall) {
-    if (player === this.joueur1.spriteMoto) {
-      if (wall !== this.joueur1.lastWall) {
-        return true;
+  GamePlay.prototype.collisionTest = function(joueur, positionX, positionY) {
+    var combien, i, j, posTempX, posTempY, ref, retour;
+    this.bmd.update();
+    combien = 0;
+    for (i = j = 0, ref = this.epaisseurMur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+      posTempX = positionX;
+      posTempY = positionY;
+      if (joueur.body.velocity.x === this.globalVelocity) {
+        posTempX += this.epaisseurMur + 4;
+        posTempY += i;
+      } else if (joueur.body.velocity.x === -this.globalVelocity) {
+        posTempX -= 4;
+        posTempY += i;
+      } else if (joueur.body.velocity.y === this.globalVelocity) {
+        posTempY += this.epaisseurMur + 4;
+        posTempX += i;
       } else {
-        return false;
+        posTempY -= 4;
+        posTempX += i;
+      }
+      retour = this.bmd.getPixel(posTempX, posTempY);
+      if (i === 0) {
+        this.bmdtest.context.fillRect(posTempX, posTempY, 1, 1);
+        this.bmdtest.dirty = true;
+      }
+      if (retour.r || retour.g || retour.b) {
+        combien++;
       }
     }
+    if (combien > (3 * this.epaisseurMur / 4)) {
+      console.log(combien);
+      return this.explode(joueur);
+    }
   };
 
-  GamePlay.prototype.explode = function() {
+  GamePlay.prototype.explode = function(joueur) {
     return console.log("boum!");
   };
 
@@ -163,33 +84,34 @@ GamePlay = (function() {
       console.log('GamePlay::preload()');
     }
     game.load.image('fleche_gauche', 'assets/fleche_gauche.png');
-    game.load.image('fleche_droite', 'assets/fleche_droite.png');
-    game.load.image('moto1', 'assets/bike.png');
-    game.load.image('moto2', 'assets/bike.png');
-    game.load.image('moto3', 'assets/bike.png');
-    return game.load.image('moto4', 'assets/bike.png');
+    return game.load.image('fleche_droite', 'assets/fleche_droite.png');
   };
 
   GamePlay.prototype.create = function() {
-    var bmd;
+    var bg, bg2, bmd;
     if (debug) {
       console.log('GamePlay::create()');
     }
-    game.time.advancedTiming = true;
-    game.stage.smoothed = false;
-    bmd = game.add.bitmapData();
-    bmd.ctx.beginPath();
-    bmd.ctx.fillStyle = '#0000FF';
-    bmd.ctx.rect(0, 0, 1000, 1000);
-    bmd.ctx.fill();
-    this.joueur1.spriteMoto = game.add.sprite(50, 50, bmd);
-    this.joueur1.spriteMoto.width = this.epaisseurMur;
-    this.joueur1.spriteMoto.height = this.epaisseurMur;
-    this.listeSpriteMur = game.add.group();
+    this.epaisseurMoto *= this.epaisseurMur;
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.arcade.enable(this.joueur1.spriteMoto);
-    this.joueur1.spriteMoto.body.velocity.y = this.globalVelocity;
-    this.tourne(this.joueur1, "gauche");
+    game.stage.backgroundColor = '#124184';
+    bmd = game.add.bitmapData(this.epaisseurMoto, this.epaisseurMoto);
+    bmd.ctx.beginPath();
+    bmd.ctx.rect(0, 0, this.epaisseurMoto, this.epaisseurMoto);
+    bmd.ctx.fillStyle = '#ff0000';
+    bmd.ctx.fill();
+    this.joueur1 = game.add.sprite(200, 200, bmd);
+    this.bmd = game.add.bitmapData(game.width, game.height);
+    this.bmd.context.fillStyle = '#ffffff';
+    this.bmd.ctx.fill();
+    bg = game.add.sprite(0, 0, this.bmd);
+    this.bmdtest = game.add.bitmapData(game.width, game.height);
+    this.bmdtest.context.fillStyle = '#00FF00';
+    this.bmdtest.ctx.fill();
+    bg2 = game.add.sprite(0, 0, this.bmdtest);
+    game.physics.arcade.enable(this.joueur1, Phaser.Physics.ARCADE);
+    this.joueur1.body.velocity.x = this.globalVelocity;
+    this.joueur1.anchor.set(0.5);
     this.spriteG = game.add.sprite(0, 0, 'fleche_gauche');
     this.spriteG.scale.setTo(0.2, 0.2);
     this.spriteD = game.add.sprite(50, 0, 'fleche_droite');
@@ -215,11 +137,17 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.update = function() {
+    var positionX, positionY;
     if (debug) {
       console.log('GamePlay::update()');
     }
-    this.prolongerMur(this.joueur1);
-    return game.physics.arcade.collide(this.joueur1.spriteMoto, this.listeSpriteMur, this.explode, this.verifCollide, this);
+    positionX = this.joueur1.x - this.epaisseurMur / 2;
+    positionY = this.joueur1.y - this.epaisseurMur / 2;
+    if (this.joueur1.alive) {
+      this.collisionTest(this.joueur1, positionX, positionY);
+    }
+    this.bmd.context.fillRect(positionX, positionY, this.epaisseurMur, this.epaisseurMur);
+    return this.bmd.dirty = true;
   };
 
   return GamePlay;
