@@ -9,6 +9,8 @@ class GameTitle
     @game.load.image 'buttonPlay', '/assets/img/buttonPlay.png'
     @game.load.image 'orangeTrace', '/assets/img/orangeTrace.png'
 
+    return
+
   create: ->
     console.log 'GameTitle::create()' if debug
 
@@ -30,6 +32,8 @@ class GameTitle
     @sButtonPlay = @game.add.button @game.world.centerX, @sLogo.y, 'buttonPlay', @onButtonPlayClick, @, 0, 1, 2
     @sButtonPlay.anchor.setTo 0.5, -1
 
+    return
+
   update: ->
     console.log 'GameTitle::update()' if debug
 
@@ -40,10 +44,14 @@ class GameTitle
         trace.x = Math.random() * @game.width
         trace.y = 0
 
+    return
+
 
   onButtonPlayClick: ->
     console.log 'Jouer'
     @game.state.start 'GamePlay'
+
+    return
 
   _initATrace: ->
     velocity = Math.random() * 50 + 10

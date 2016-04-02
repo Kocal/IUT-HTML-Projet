@@ -15,7 +15,7 @@ GameTitle = (function() {
     }
     this.game.load.image('logo', '/assets/img/logo.png');
     this.game.load.image('buttonPlay', '/assets/img/buttonPlay.png');
-    return this.game.load.image('orangeTrace', '/assets/img/orangeTrace.png');
+    this.game.load.image('orangeTrace', '/assets/img/orangeTrace.png');
   };
 
   GameTitle.prototype.create = function() {
@@ -32,32 +32,28 @@ GameTitle = (function() {
     this.sLogo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
     this.sLogo.anchor.setTo(0.5, 1);
     this.sButtonPlay = this.game.add.button(this.game.world.centerX, this.sLogo.y, 'buttonPlay', this.onButtonPlayClick, this, 0, 1, 2);
-    return this.sButtonPlay.anchor.setTo(0.5, -1);
+    this.sButtonPlay.anchor.setTo(0.5, -1);
   };
 
   GameTitle.prototype.update = function() {
-    var j, len, ref, results, trace;
+    var j, len, ref, trace;
     if (debug) {
       console.log('GameTitle::update()');
     }
     ref = this.traces.children;
-    results = [];
     for (j = 0, len = ref.length; j < len; j++) {
       trace = ref[j];
       this.texture.renderXY(trace, trace.x, trace.y);
       if (trace.x >= this.game.width || trace.y >= this.game.height) {
         trace.x = Math.random() * this.game.width;
-        results.push(trace.y = 0);
-      } else {
-        results.push(void 0);
+        trace.y = 0;
       }
     }
-    return results;
   };
 
   GameTitle.prototype.onButtonPlayClick = function() {
     console.log('Jouer');
-    return this.game.state.start('GamePlay');
+    this.game.state.start('GamePlay');
   };
 
   GameTitle.prototype._initATrace = function() {
