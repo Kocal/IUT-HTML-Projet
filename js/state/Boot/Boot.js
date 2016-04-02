@@ -16,15 +16,10 @@ Boot = (function() {
   };
 
   Boot.prototype.create = function() {
-    var timer;
     if (debug) {
       console.log('Boot::create()');
     }
-    timer = this.game.time.create();
-    timer.add(1000, function() {
-      return this.game.state.start('GameTitle');
-    }, this);
-    return timer.start();
+    return this.game.state.start('GameTitle');
   };
 
   return Boot;
