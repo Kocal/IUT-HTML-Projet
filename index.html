@@ -16,12 +16,12 @@
 
 
 <script>
-    var debug = true;
+    var debug = false;
 
-    var width = Math.round(window.innerWidth * 0.9)
-    var height = Math.round(window.innerHeight * 0.9)
-    console.log(width, height)
+    var width = Math.round(window.innerWidth)
+    var height = Math.round(window.innerHeight)
     var game = new Phaser.Game(width, height, Phaser.AUTO, 'game-container');
+
 
     game.state.add("Boot", Boot);
     game.state.add("GameTitle", GameTitle);

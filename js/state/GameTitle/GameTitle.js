@@ -60,7 +60,7 @@ GameTitle = (function() {
 
   GameTitle.prototype.onButtonPlayClick = function() {
     console.log('Jouer');
-    this.game.state.start('GamePlay');
+    this.game.state.start('GamePlay', true, false, 4);
   };
 
   GameTitle.prototype._initATrace = function() {

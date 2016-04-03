@@ -2,13 +2,7 @@
 var GamePlay;
 
 GamePlay = (function() {
-  GamePlay.prototype.joueur1 = null;
-
-  GamePlay.prototype.joueur2 = null;
-
-  GamePlay.prototype.joueur3 = null;
-
-  GamePlay.prototype.joueur4 = null;
+  GamePlay.prototype.joueurs = [];
 
   GamePlay.prototype.spriteG = null;
 
@@ -20,7 +14,9 @@ GamePlay = (function() {
 
   GamePlay.prototype.epaisseurMur = 10;
 
-  GamePlay.prototype.epaisseurMoto = 1;
+  GamePlay.prototype.nbJoueur = 1;
+
+  GamePlay.prototype.couleursJ = '#00ff00';
 
   GamePlay.prototype.tourne = function(joueur, direction) {
     if (direction === "droite") {
@@ -32,37 +28,39 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.collisionTest = function(joueur) {
-    var combien, i, j, posTempX, posTempY, ref, retour;
+    var i, j, len, posTempX, posTempY, ref, results, retour;
+    if (joueur.x < 0 || joueur.x > game.width || joueur.y < 0 || joueur.y > game.height) {
+      this.explode(joueur);
+    }
     this.bmd.update();
-    combien = 0;
-    for (i = j = 1, ref = this.epaisseurMur - 2; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
+    ref = [1 - this.epaisseurMur / 2, -1 - (-this.epaisseurMur / 2)];
+    results = [];
+    for (j = 0, len = ref.length; j < len; j++) {
+      i = ref[j];
       posTempX = joueur.x;
       posTempY = joueur.y;
-      if (joueur.body.velocity.x === this.globalVelocity) {
-        posTempX += joueur.width / 2 + 2;
-        posTempY -= joueur.height / 2;
-        posTempY += i;
-      } else if (joueur.body.velocity.x === -this.globalVelocity) {
-        posTempX -= joueur.width / 2 + 2;
-        posTempY -= joueur.height / 2;
-        posTempY += i;
-      } else if (joueur.body.velocity.y === this.globalVelocity) {
-        posTempY += joueur.height / 2 + 2;
-        posTempX += joueur.width / 2;
-        posTempX += i;
+      if (joueur.body.velocity.x > 1) {
+        posTempX += joueur.width / 2 + 4;
+        posTempY -= joueur.height / 2 - i;
+      } else if (joueur.body.velocity.x < -1) {
+        posTempX -= joueur.width / 2 + 4;
+        posTempY -= joueur.height / 2 + i;
+      } else if (joueur.body.velocity.y > 1) {
+        posTempY += joueur.height / 2 + 5;
+        posTempX -= joueur.width / 2 - i;
       } else {
-        posTempY -= joueur.height / 2 + 2;
-        posTempX -= joueur.width / 2;
-        posTempX += i;
+        posTempY -= joueur.height / 2 + 4;
+        posTempX -= joueur.width / 2 - i;
       }
-      retour = this.bmd.getPixel(Math.round(posTempX), Math.round(posTempY));
-      if (retour.r || retour.g || retour.b) {
-        combien++;
+      retour = this.bmd.getPixel(posTempX, posTempY);
+      if (retour.a !== 0) {
+        this.explode(joueur);
+        break;
+      } else {
+        results.push(void 0);
       }
     }
-    if (combien > (this.epaisseurMur / 5)) {
-      return this.explode(joueur);
-    }
+    return results;
   };
 
   GamePlay.prototype.explode = function(joueur) {
@@ -79,6 +77,10 @@ GamePlay = (function() {
     }
   }
 
+  GamePlay.prototype.init = function(nbJoueur) {
+    return this.nbJoueur = nbJoueur;
+  };
+
   GamePlay.prototype.preload = function() {
     if (debug) {
       console.log('GamePlay::preload()');
@@ -88,62 +90,106 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.create = function() {
-    var bg, bmd;
+    var bg, i, j, k, ref, ref1;
     if (debug) {
       console.log('GamePlay::create()');
     }
-    this.epaisseurMoto *= this.epaisseurMur;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.stage.backgroundColor = '#124184';
-    bmd = game.add.bitmapData(this.epaisseurMoto, this.epaisseurMoto);
-    bmd.ctx.beginPath();
-    bmd.ctx.rect(0, 0, this.epaisseurMoto, this.epaisseurMoto);
-    bmd.ctx.fillStyle = '#ff0000';
-    bmd.ctx.fill();
-    this.joueur1 = game.add.sprite(200, 200, bmd);
+    this.nbJoueur = 4;
+    this.couleursJ = new Array(4);
+    this.couleursJ[0] = '#00ff00';
+    this.couleursJ[1] = '#00ffff';
+    this.couleursJ[2] = '#ff00ff';
+    this.couleursJ[3] = '#ffff00';
+    for (i = j = 0, ref = this.nbJoueur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+      this.joueurs.push(game.add.sprite(0, 0, null));
+      this.joueurs[i].width = this.epaisseurMur;
+      this.joueurs[i].height = this.epaisseurMur;
+      game.physics.arcade.enable(this.joueurs[i], Phaser.Physics.ARCADE);
+      this.joueurs[i].body.velocity.x = this.globalVelocity;
+      this.joueurs[i].anchor.set(0.5);
+    }
+    if (this.nbJoueur === 1) {
+      this.joueurs[0].x = game.width / 4;
+      this.joueurs[0].y = game.height / 4;
+      this.joueurs[0].angle = 90;
+    } else if (this.nbJoueur === 2) {
+      this.joueurs[0].x = game.width / 4;
+      this.joueurs[0].y = game.height / 4;
+      this.joueurs[0].angle = 90;
+      this.joueurs[1].x = 3 * game.width / 4;
+      this.joueurs[1].y = 3 * game.height / 4;
+      this.joueurs[1].angle = -90;
+    } else if (this.nbJoueur === 3) {
+      this.joueurs[0].x = game.width / 4;
+      this.joueurs[0].y = game.height / 4;
+      this.joueurs[0].angle = 90;
+      this.joueurs[1].x = 3 * game.width / 4;
+      this.joueurs[1].y = game.height / 4;
+      this.joueurs[1].angle = 180;
+      this.joueurs[2].x = game.width / 2;
+      this.joueurs[2].y = 3 * game.height / 4;
+    } else if (this.nbJoueur === 4) {
+      this.joueurs[0].x = game.width / 4;
+      this.joueurs[0].y = game.height / 4;
+      this.joueurs[0].angle = 90;
+      this.joueurs[1].x = 3 * game.width / 4;
+      this.joueurs[1].y = game.height / 4;
+      this.joueurs[1].angle = 180;
+      this.joueurs[2].x = game.width / 4;
+      this.joueurs[2].y = 3 * game.height / 4;
+      this.joueurs[3].x = 3 * game.width / 4;
+      this.joueurs[3].y = 3 * game.height / 4;
+      this.joueurs[3].angle = -90;
+    }
+    for (i = k = 0, ref1 = this.nbJoueur - 1; 0 <= ref1 ? k <= ref1 : k >= ref1; i = 0 <= ref1 ? ++k : --k) {
+      game.physics.arcade.velocityFromAngle(this.joueurs[i].angle, this.globalVelocity, this.joueurs[i].body.velocity);
+    }
     this.bmd = game.add.bitmapData(game.width, game.height);
-    this.bmd.context.fillStyle = '#ffffff';
-    this.bmd.ctx.fill();
     bg = game.add.sprite(0, 0, this.bmd);
-    game.physics.arcade.enable(this.joueur1, Phaser.Physics.ARCADE);
-    this.joueur1.body.velocity.x = this.globalVelocity;
-    this.joueur1.anchor.set(0.5);
     this.spriteG = game.add.sprite(0, 0, 'fleche_gauche');
     this.spriteG.scale.setTo(0.2, 0.2);
     this.spriteD = game.add.sprite(50, 0, 'fleche_droite');
     this.spriteD.scale.setTo(0.2, 0.2);
     this.spriteG.inputEnabled = true;
-    this.spriteG.events.onInputDown.add(this.listenerBoutonG, this);
+    this.spriteG.events.onInputDown.add(this.listenerBoutonG1, this);
     this.spriteD.inputEnabled = true;
-    return this.spriteD.events.onInputDown.add(this.listenerBoutonD, this);
+    return this.spriteD.events.onInputDown.add(this.listenerBoutonD1, this);
   };
 
-  GamePlay.prototype.listenerBoutonG = function() {
+  GamePlay.prototype.listenerBoutonG1 = function() {
     if (debug) {
       console.log("bonton gauche");
     }
-    return this.tourne(this.joueur1, "gauche");
+    return this.tourne(this.joueurs[0], "gauche");
   };
 
-  GamePlay.prototype.listenerBoutonD = function() {
+  GamePlay.prototype.listenerBoutonD1 = function() {
     if (debug) {
       console.log("bonton droit");
     }
-    return this.tourne(this.joueur1, "droite");
+    return this.tourne(this.joueurs[0], "droite");
   };
 
   GamePlay.prototype.update = function() {
-    var positionX, positionY;
+    var i, j, positionX, positionY, ref, results;
     if (debug) {
       console.log('GamePlay::update()');
     }
-    positionX = this.joueur1.x - this.epaisseurMur / 2;
-    positionY = this.joueur1.y - this.epaisseurMur / 2;
-    if (this.joueur1.alive) {
-      this.collisionTest(this.joueur1);
+    results = [];
+    for (i = j = 0, ref = this.nbJoueur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+      positionX = this.joueurs[i].x - this.epaisseurMur / 2;
+      positionY = this.joueurs[i].y - this.epaisseurMur / 2;
+      this.bmd.context.fillStyle = this.couleursJ[i];
+      this.bmd.ctx.fill();
+      if (this.joueurs[i].alive) {
+        this.collisionTest(this.joueurs[i]);
+      }
+      this.bmd.context.fillRect(positionX, positionY, this.epaisseurMur, this.epaisseurMur);
+      results.push(this.bmd.dirty = true);
     }
-    this.bmd.context.fillRect(positionX, positionY, this.epaisseurMur, this.epaisseurMur);
-    return this.bmd.dirty = true;
+    return results;
   };
 
   return GamePlay;

@@ -4,6 +4,8 @@ class GameTitle
     console.log 'GameTitle::constructor()' if debug
 
 
+
+
   preload: ->
     console.log 'GameTitle::preload()' if debug
     @game.load.image 'logo', '/assets/img/logo.png'
@@ -57,7 +59,7 @@ class GameTitle
 
   onButtonPlayClick: ->
     console.log 'Jouer'
-    @game.state.start 'GamePlay'
+    @game.state.start 'GamePlay', true, false, 4
 
     return
 

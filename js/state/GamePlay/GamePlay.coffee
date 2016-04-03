@@ -1,10 +1,7 @@
 class GamePlay
 
   # sprites des joueurs
-  joueur1: null
-  joueur2: null
-  joueur3: null
-  joueur4: null
+  joueurs: []
 
   # sprites des deux boutons
   spriteG: null
@@ -14,7 +11,10 @@ class GamePlay
 
   globalVelocity: 100 # vitesse des motos
   epaisseurMur : 10
-  epaisseurMoto: 1
+
+  nbJoueur : 1
+
+  couleursJ: '#00ff00'
 
 
   tourne: (joueur, direction) ->
@@ -22,45 +22,40 @@ class GamePlay
       joueur.angle += 90
     else if direction == "gauche"
       joueur.angle -= 90;
+
     game.physics.arcade.velocityFromAngle(joueur.angle, @globalVelocity, joueur.body.velocity);
 
 
   collisionTest: (joueur) ->
 
-
+    if joueur.x < 0 || joueur.x > game.width || joueur.y < 0 || joueur.y > game.height
+      @explode(joueur)
 
     @bmd.update()
-    combien = 0
-    for i in [1..@epaisseurMur-2]
+    for i in [1-@epaisseurMur/2, -1-(-@epaisseurMur/2)]
       posTempX = joueur.x
       posTempY = joueur.y
 
-
-      if joueur.body.velocity.x == @globalVelocity
-        posTempX += joueur.width/2 + 2
-        posTempY -= joueur.height/2
-        posTempY += i
-      else if joueur.body.velocity.x == -@globalVelocity
-        posTempX -= (joueur.width/2 +2)
-        posTempY -= joueur.height/2
-        posTempY += i
-      else if joueur.body.velocity.y == @globalVelocity
-        posTempY += joueur.height/2 + 2
-        posTempX += joueur.width/2
-        posTempX += i
+      if joueur.body.velocity.x > 1
+        posTempX += joueur.width/2 +4
+        posTempY -= joueur.height/2 - i
+      else if joueur.body.velocity.x < -1
+        posTempX -= joueur.width/2 + 4
+        posTempY -= joueur.height/2 + i
+      else if joueur.body.velocity.y > 1
+        posTempY += joueur.height/2 +5
+        posTempX -= joueur.width/2 - i
       else
-        posTempY -= joueur.height/2 + 2
-        posTempX -= joueur.width/2
-        posTempX += i
+        posTempY -= joueur.height/2 + 4
+        posTempX -= joueur.width/2 -i
 
-      retour = @bmd.getPixel Math.round(posTempX), Math.round(posTempY)
+      retour = @bmd.getPixel posTempX, posTempY
 
-      if retour.r || retour.g || retour.b
-        combien++
+      if retour.a != 0
+        @explode(joueur)
+        break
 
-    # en gros si 1/5 eme de la moto touche un mur..
-    if combien > (@epaisseurMur/5)
-      @explode(joueur)
+
 
 
   explode: (joueur) ->
@@ -69,6 +64,9 @@ class GamePlay
 
   constructor: (@game) ->
     console.log 'GamePlay::construct()' if debug
+
+  init: (nbJoueur) ->
+    @nbJoueur = nbJoueur
 
   preload: ->
     console.log 'GamePlay::preload()' if debug
@@ -79,7 +77,6 @@ class GamePlay
   create: ->
     console.log 'GamePlay::create()' if debug
 
-    @epaisseurMoto *= @epaisseurMur
 
     # initialisation de la physique
     game.physics.startSystem Phaser.Physics.ARCADE
@@ -87,29 +84,84 @@ class GamePlay
     #couleur de fond
     game.stage.backgroundColor = '#124184';
 
-    # on genere le joueur 1, un sprite rouge degueu
-    bmd = game.add.bitmapData(@epaisseurMoto,@epaisseurMoto);
-    bmd.ctx.beginPath()
-    bmd.ctx.rect(0,0,@epaisseurMoto,@epaisseurMoto)
-    bmd.ctx.fillStyle = '#ff0000'
-    bmd.ctx.fill()
-    @joueur1 = game.add.sprite(200, 200, bmd)
+    @nbJoueur = 4
+
+    @couleursJ = new Array(4)
+
+    @couleursJ[0] = '#00ff00'
+    @couleursJ[1] = '#00ffff'
+    @couleursJ[2] = '#ff00ff'
+    @couleursJ[3] = '#ffff00'
+
+
+    for i in [0..@nbJoueur-1]
+      @joueurs.push game.add.sprite(0, 0, null) # on ne sprite pas le sprite x)
+
+      @joueurs[i].width = @epaisseurMur
+      @joueurs[i].height = @epaisseurMur
+
+      # on active la physique pour le joueur
+      game.physics.arcade.enable @joueurs[i], Phaser.Physics.ARCADE
+      @joueurs[i].body.velocity.x = @globalVelocity
+
+      # permet de positionner les positions au centre du sprite
+      @joueurs[i].anchor.set(0.5)
+
+
+    if @nbJoueur == 1
+      @joueurs[0].x = game.width/4
+      @joueurs[0].y = game.height/4
+      @joueurs[0].angle = 90
+
+
+    else if @nbJoueur == 2
+      @joueurs[0].x = game.width/4
+      @joueurs[0].y = game.height/4
+      @joueurs[0].angle = 90
+
+      @joueurs[1].x = 3*game.width/4
+      @joueurs[1].y = 3*game.height/4
+      @joueurs[1].angle = -90
+
+    else if @nbJoueur == 3
+      @joueurs[0].x = game.width/4
+      @joueurs[0].y = game.height/4
+      @joueurs[0].angle = 90
+
+      @joueurs[1].x = 3*game.width/4
+      @joueurs[1].y = game.height/4
+      @joueurs[1].angle = 180
+
+      @joueurs[2].x = game.width/2
+      @joueurs[2].y = 3*game.height/4
+
+    else if @nbJoueur == 4
+      @joueurs[0].x = game.width/4
+      @joueurs[0].y = game.height/4
+      @joueurs[0].angle = 90
+
+      @joueurs[1].x = 3*game.width/4
+      @joueurs[1].y = game.height/4
+      @joueurs[1].angle = 180
+
+      @joueurs[2].x = game.width/4
+      @joueurs[2].y = 3*game.height/4
+
+      @joueurs[3].x = 3*game.width/4
+      @joueurs[3].y = 3*game.height/4
+      @joueurs[3].angle = -90
+
+    for i in [0..@nbJoueur-1]
+      game.physics.arcade.velocityFromAngle(@joueurs[i].angle, @globalVelocity, @joueurs[i].body.velocity);
 
 
     # bitMap qui sers à dessiner les murs
     @bmd = game.add.bitmapData(game.width, game.height)
-    @bmd.context.fillStyle = '#ffffff'
-    @bmd.ctx.fill()
     bg = game.add.sprite(0, 0, @bmd);
 
 
-    # on active la physique pour le joueur1
-    game.physics.arcade.enable @joueur1, Phaser.Physics.ARCADE
-    @joueur1.body.velocity.x = @globalVelocity
 
 
-    # permet de positionner les positions au centre du sprite
-    @joueur1.anchor.set(0.5)
 
 
 
@@ -123,32 +175,38 @@ class GamePlay
 
     #ensuite on active les actions aux inputs
     @spriteG.inputEnabled = true;
-    @spriteG.events.onInputDown.add(@listenerBoutonG, this);
+    @spriteG.events.onInputDown.add(@listenerBoutonG1, this);
 
     @spriteD.inputEnabled = true;
-    @spriteD.events.onInputDown.add(@listenerBoutonD, this);
+    @spriteD.events.onInputDown.add(@listenerBoutonD1, this);
 
 
 
 
-  listenerBoutonG: () ->
+  listenerBoutonG1: () ->
     console.log "bonton gauche" if debug
-    @tourne @joueur1, "gauche"
+    @tourne @joueurs[0], "gauche"
 
-  listenerBoutonD: () ->
+  listenerBoutonD1: () ->
     console.log "bonton droit" if debug
-    @tourne @joueur1, "droite"
+    @tourne @joueurs[0], "droite"
 
   update: ->
     console.log 'GamePlay::update()' if debug
 
 
-    positionX = @joueur1.x - @epaisseurMur/2
-    positionY = @joueur1.y - @epaisseurMur/2
 
 
-    if @joueur1.alive
-      @collisionTest @joueur1
+    for i in [0..@nbJoueur-1]
+      positionX = @joueurs[i].x - @epaisseurMur/2
+      positionY = @joueurs[i].y - @epaisseurMur/2
 
-    @bmd.context.fillRect(positionX, positionY, @epaisseurMur, @epaisseurMur)
-    @bmd.dirty = true
+      @bmd.context.fillStyle = @couleursJ[i]
+      @bmd.ctx.fill()
+
+
+      if @joueurs[i].alive
+        @collisionTest @joueurs[i]
+
+      @bmd.context.fillRect(positionX, positionY, @epaisseurMur, @epaisseurMur)
+      @bmd.dirty = true
