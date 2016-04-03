@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -13,9 +13,15 @@
 <script src="js/state/Boot/Boot.js"></script>
 <script src="js/state/GameTitle/GameTitle.js"></script>
 <script src="js/state/GamePlay/GamePlay.js"></script>
+
+
 <script>
     var debug = true;
-    var game = new Phaser.Game("100%", "100%", Phaser.AUTO, 'game-container');
+
+    var width = Math.round(window.innerWidth * 0.9)
+    var height = Math.round(window.innerHeight * 0.9)
+    console.log(width, height)
+    var game = new Phaser.Game(width, height, Phaser.AUTO, 'game-container');
 
     game.state.add("Boot", Boot);
     game.state.add("GameTitle", GameTitle);

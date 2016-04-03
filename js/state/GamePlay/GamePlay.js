@@ -2,8 +2,78 @@
 var GamePlay;
 
 GamePlay = (function() {
-  function GamePlay(game) {
-    this.game = game;
+  GamePlay.prototype.joueur1 = null;
+
+  GamePlay.prototype.joueur2 = null;
+
+  GamePlay.prototype.joueur3 = null;
+
+  GamePlay.prototype.joueur4 = null;
+
+  GamePlay.prototype.spriteG = null;
+
+  GamePlay.prototype.spriteD = null;
+
+  GamePlay.prototype.bmd = null;
+
+  GamePlay.prototype.globalVelocity = 100;
+
+  GamePlay.prototype.epaisseurMur = 10;
+
+  GamePlay.prototype.epaisseurMoto = 1;
+
+  GamePlay.prototype.tourne = function(joueur, direction) {
+    if (direction === "droite") {
+      joueur.angle += 90;
+    } else if (direction === "gauche") {
+      joueur.angle -= 90;
+    }
+    return game.physics.arcade.velocityFromAngle(joueur.angle, this.globalVelocity, joueur.body.velocity);
+  };
+
+  GamePlay.prototype.collisionTest = function(joueur) {
+    var combien, i, j, posTempX, posTempY, ref, retour;
+    this.bmd.update();
+    combien = 0;
+    for (i = j = 1, ref = this.epaisseurMur - 2; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
+      posTempX = joueur.x;
+      posTempY = joueur.y;
+      if (joueur.body.velocity.x === this.globalVelocity) {
+        posTempX += joueur.width / 2 + 2;
+        posTempY -= joueur.height / 2;
+        posTempY += i;
+      } else if (joueur.body.velocity.x === -this.globalVelocity) {
+        posTempX -= joueur.width / 2 + 2;
+        posTempY -= joueur.height / 2;
+        posTempY += i;
+      } else if (joueur.body.velocity.y === this.globalVelocity) {
+        posTempY += joueur.height / 2 + 2;
+        posTempX += joueur.width / 2;
+        posTempX += i;
+      } else {
+        posTempY -= joueur.height / 2 + 2;
+        posTempX -= joueur.width / 2;
+        posTempX += i;
+      }
+      retour = this.bmd.getPixel(Math.round(posTempX), Math.round(posTempY));
+      if (retour.r || retour.g || retour.b) {
+        combien++;
+      }
+    }
+    if (combien > (this.epaisseurMur / 5)) {
+      return this.explode(joueur);
+    }
+  };
+
+  GamePlay.prototype.explode = function(joueur) {
+    if (debug) {
+      console.log("boum!");
+    }
+    return joueur.kill();
+  };
+
+  function GamePlay(game1) {
+    this.game = game1;
     if (debug) {
       console.log('GamePlay::construct()');
     }
@@ -11,20 +81,69 @@ GamePlay = (function() {
 
   GamePlay.prototype.preload = function() {
     if (debug) {
-      return console.log('GamePlay::preload()');
+      console.log('GamePlay::preload()');
     }
+    game.load.image('fleche_gauche', 'assets/fleche_gauche.png');
+    return game.load.image('fleche_droite', 'assets/fleche_droite.png');
   };
 
   GamePlay.prototype.create = function() {
+    var bg, bmd;
     if (debug) {
-      return console.log('GamePlay::create()');
+      console.log('GamePlay::create()');
     }
+    this.epaisseurMoto *= this.epaisseurMur;
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.stage.backgroundColor = '#124184';
+    bmd = game.add.bitmapData(this.epaisseurMoto, this.epaisseurMoto);
+    bmd.ctx.beginPath();
+    bmd.ctx.rect(0, 0, this.epaisseurMoto, this.epaisseurMoto);
+    bmd.ctx.fillStyle = '#ff0000';
+    bmd.ctx.fill();
+    this.joueur1 = game.add.sprite(200, 200, bmd);
+    this.bmd = game.add.bitmapData(game.width, game.height);
+    this.bmd.context.fillStyle = '#ffffff';
+    this.bmd.ctx.fill();
+    bg = game.add.sprite(0, 0, this.bmd);
+    game.physics.arcade.enable(this.joueur1, Phaser.Physics.ARCADE);
+    this.joueur1.body.velocity.x = this.globalVelocity;
+    this.joueur1.anchor.set(0.5);
+    this.spriteG = game.add.sprite(0, 0, 'fleche_gauche');
+    this.spriteG.scale.setTo(0.2, 0.2);
+    this.spriteD = game.add.sprite(50, 0, 'fleche_droite');
+    this.spriteD.scale.setTo(0.2, 0.2);
+    this.spriteG.inputEnabled = true;
+    this.spriteG.events.onInputDown.add(this.listenerBoutonG, this);
+    this.spriteD.inputEnabled = true;
+    return this.spriteD.events.onInputDown.add(this.listenerBoutonD, this);
+  };
+
+  GamePlay.prototype.listenerBoutonG = function() {
+    if (debug) {
+      console.log("bonton gauche");
+    }
+    return this.tourne(this.joueur1, "gauche");
+  };
+
+  GamePlay.prototype.listenerBoutonD = function() {
+    if (debug) {
+      console.log("bonton droit");
+    }
+    return this.tourne(this.joueur1, "droite");
   };
 
   GamePlay.prototype.update = function() {
+    var positionX, positionY;
     if (debug) {
-      return console.log('GamePlay::update()');
+      console.log('GamePlay::update()');
     }
+    positionX = this.joueur1.x - this.epaisseurMur / 2;
+    positionY = this.joueur1.y - this.epaisseurMur / 2;
+    if (this.joueur1.alive) {
+      this.collisionTest(this.joueur1);
+    }
+    this.bmd.context.fillRect(positionX, positionY, this.epaisseurMur, this.epaisseurMur);
+    return this.bmd.dirty = true;
   };
 
   return GamePlay;
