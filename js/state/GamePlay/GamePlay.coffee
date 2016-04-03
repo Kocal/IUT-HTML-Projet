@@ -14,7 +14,7 @@ class GamePlay
 
   nbJoueur : 1
 
-  couleursJ: '#00ff00'
+  couleursJ: []
 
 
   tourne: (joueur, direction) ->
@@ -28,35 +28,28 @@ class GamePlay
 
   collisionTest: (joueur) ->
 
+
     if joueur.x < 0 || joueur.x > game.width || joueur.y < 0 || joueur.y > game.height
+      console.log "lol"
       @explode(joueur)
 
-    @bmd.update()
-    for i in [1-@epaisseurMur/2, -1-(-@epaisseurMur/2)]
-      posTempX = joueur.x
-      posTempY = joueur.y
 
-      if joueur.body.velocity.x > 1
-        posTempX += joueur.width/2 +4
-        posTempY -= joueur.height/2 - i
-      else if joueur.body.velocity.x < -1
-        posTempX -= joueur.width/2 + 4
-        posTempY -= joueur.height/2 + i
-      else if joueur.body.velocity.y > 1
-        posTempY += joueur.height/2 +5
-        posTempX -= joueur.width/2 - i
-      else
-        posTempY -= joueur.height/2 + 4
-        posTempX -= joueur.width/2 -i
+    posTempX = joueur.x
+    posTempY = joueur.y
 
-      retour = @bmd.getPixel posTempX, posTempY
+    if joueur.body.velocity.x > 1
+      posTempX += joueur.width/2+2
+    else if joueur.body.velocity.x < -1
+      posTempX -= joueur.width/2 +2
+    else if joueur.body.velocity.y > 1
+      posTempY += joueur.height/2+2
+    else
+      posTempY -= joueur.height/2 + 2
 
-      if retour.a != 0
-        @explode(joueur)
-        break
+    retour = @bmd.getPixel Math.round(posTempX), Math.round(posTempY)
 
-
-
+    if retour.a != 0
+      @explode joueur
 
   explode: (joueur) ->
     console.log "boum!" if debug
@@ -196,7 +189,8 @@ class GamePlay
 
 
 
-
+    @bmd.update()
+    
     for i in [0..@nbJoueur-1]
       positionX = @joueurs[i].x - @epaisseurMur/2
       positionY = @joueurs[i].y - @epaisseurMur/2

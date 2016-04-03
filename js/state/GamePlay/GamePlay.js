@@ -16,7 +16,7 @@ GamePlay = (function() {
 
   GamePlay.prototype.nbJoueur = 1;
 
-  GamePlay.prototype.couleursJ = '#00ff00';
+  GamePlay.prototype.couleursJ = [];
 
   GamePlay.prototype.tourne = function(joueur, direction) {
     if (direction === "droite") {
@@ -28,39 +28,26 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.collisionTest = function(joueur) {
-    var i, j, len, posTempX, posTempY, ref, results, retour;
+    var posTempX, posTempY, retour;
     if (joueur.x < 0 || joueur.x > game.width || joueur.y < 0 || joueur.y > game.height) {
+      console.log("lol");
       this.explode(joueur);
     }
-    this.bmd.update();
-    ref = [1 - this.epaisseurMur / 2, -1 - (-this.epaisseurMur / 2)];
-    results = [];
-    for (j = 0, len = ref.length; j < len; j++) {
-      i = ref[j];
-      posTempX = joueur.x;
-      posTempY = joueur.y;
-      if (joueur.body.velocity.x > 1) {
-        posTempX += joueur.width / 2 + 4;
-        posTempY -= joueur.height / 2 - i;
-      } else if (joueur.body.velocity.x < -1) {
-        posTempX -= joueur.width / 2 + 4;
-        posTempY -= joueur.height / 2 + i;
-      } else if (joueur.body.velocity.y > 1) {
-        posTempY += joueur.height / 2 + 5;
-        posTempX -= joueur.width / 2 - i;
-      } else {
-        posTempY -= joueur.height / 2 + 4;
-        posTempX -= joueur.width / 2 - i;
-      }
-      retour = this.bmd.getPixel(posTempX, posTempY);
-      if (retour.a !== 0) {
-        this.explode(joueur);
-        break;
-      } else {
-        results.push(void 0);
-      }
+    posTempX = joueur.x;
+    posTempY = joueur.y;
+    if (joueur.body.velocity.x > 1) {
+      posTempX += joueur.width / 2 + 2;
+    } else if (joueur.body.velocity.x < -1) {
+      posTempX -= joueur.width / 2 + 2;
+    } else if (joueur.body.velocity.y > 1) {
+      posTempY += joueur.height / 2 + 2;
+    } else {
+      posTempY -= joueur.height / 2 + 2;
     }
-    return results;
+    retour = this.bmd.getPixel(Math.round(posTempX), Math.round(posTempY));
+    if (retour.a !== 0) {
+      return this.explode(joueur);
+    }
   };
 
   GamePlay.prototype.explode = function(joueur) {
@@ -177,6 +164,7 @@ GamePlay = (function() {
     if (debug) {
       console.log('GamePlay::update()');
     }
+    this.bmd.update();
     results = [];
     for (i = j = 0, ref = this.nbJoueur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
       positionX = this.joueurs[i].x - this.epaisseurMur / 2;
