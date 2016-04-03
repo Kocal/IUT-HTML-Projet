@@ -16,8 +16,6 @@ GamePlay = (function() {
 
   GamePlay.prototype.bmd = null;
 
-  GamePlay.prototype.bmdtest = null;
-
   GamePlay.prototype.globalVelocity = 100;
 
   GamePlay.prototype.epaisseurMur = 10;
@@ -55,10 +53,6 @@ GamePlay = (function() {
         posTempX += i;
       }
       retour = this.bmd.getPixel(posTempX, posTempY);
-      if (i === 0) {
-        this.bmdtest.context.fillRect(posTempX, posTempY, 1, 1);
-        this.bmdtest.dirty = true;
-      }
       if (retour.r || retour.g || retour.b) {
         combien++;
       }
@@ -91,7 +85,7 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.create = function() {
-    var bg, bg2, bmd;
+    var bg, bmd;
     if (debug) {
       console.log('GamePlay::create()');
     }
@@ -108,10 +102,6 @@ GamePlay = (function() {
     this.bmd.context.fillStyle = '#ffffff';
     this.bmd.ctx.fill();
     bg = game.add.sprite(0, 0, this.bmd);
-    this.bmdtest = game.add.bitmapData(game.width, game.height);
-    this.bmdtest.context.fillStyle = '#00FF00';
-    this.bmdtest.ctx.fill();
-    bg2 = game.add.sprite(0, 0, this.bmdtest);
     game.physics.arcade.enable(this.joueur1, Phaser.Physics.ARCADE);
     this.joueur1.body.velocity.x = this.globalVelocity;
     this.joueur1.anchor.set(0.5);

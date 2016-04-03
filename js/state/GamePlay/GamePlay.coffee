@@ -11,7 +11,6 @@ class GamePlay
   spriteD: null
 
   bmd: null
-  bmdtest: null
 
   globalVelocity: 100 # vitesse des motos
   epaisseurMur : 10
@@ -51,10 +50,6 @@ class GamePlay
         posTempX += i
 
       retour = @bmd.getPixel posTempX, posTempY
-
-      if i == 0
-        @bmdtest.context.fillRect(posTempX, posTempY, 1, 1);
-        @bmdtest.dirty = true;
 
       if retour.r || retour.g || retour.b
         combien++
@@ -102,12 +97,6 @@ class GamePlay
     @bmd.context.fillStyle = '#ffffff'
     @bmd.ctx.fill()
     bg = game.add.sprite(0, 0, @bmd);
-
-
-    @bmdtest = game.add.bitmapData(game.width, game.height)
-    @bmdtest.context.fillStyle = '#00FF00'
-    @bmdtest.ctx.fill()
-    bg2 = game.add.sprite(0, 0, @bmdtest);
 
 
     # on active la physique pour le joueur1
