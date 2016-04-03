@@ -34,23 +34,24 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.collisionTest = function(joueur, positionX, positionY) {
-    var combien, i, j, posTempX, posTempY, ref, retour;
+    var combien, difference, i, j, posTempX, posTempY, ref, retour;
     this.bmd.update();
+    difference = 3;
     combien = 0;
     for (i = j = 0, ref = this.epaisseurMur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
       posTempX = positionX;
       posTempY = positionY;
       if (joueur.body.velocity.x === this.globalVelocity) {
-        posTempX += this.epaisseurMur + 4;
+        posTempX += this.epaisseurMur + difference;
         posTempY += i;
       } else if (joueur.body.velocity.x === -this.globalVelocity) {
-        posTempX -= 4;
+        posTempX -= difference;
         posTempY += i;
       } else if (joueur.body.velocity.y === this.globalVelocity) {
-        posTempY += this.epaisseurMur + 4;
+        posTempY += this.epaisseurMur + difference;
         posTempX += i;
       } else {
-        posTempY -= 4;
+        posTempY -= difference;
         posTempX += i;
       }
       retour = this.bmd.getPixel(posTempX, posTempY);
@@ -62,14 +63,16 @@ GamePlay = (function() {
         combien++;
       }
     }
-    if (combien > (3 * this.epaisseurMur / 4)) {
-      console.log(combien);
+    if (combien > (this.epaisseurMur / 5)) {
       return this.explode(joueur);
     }
   };
 
   GamePlay.prototype.explode = function(joueur) {
-    return console.log("boum!");
+    if (debug) {
+      console.log("boum!");
+    }
+    return joueur.kill();
   };
 
   function GamePlay(game1) {

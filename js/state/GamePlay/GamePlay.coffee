@@ -28,24 +28,28 @@ class GamePlay
 
   collisionTest: (joueur, positionX, positionY) ->
 
+
+
     @bmd.update()
+    difference = 3
     combien = 0
     for i in [0..@epaisseurMur-1]
       posTempX = positionX
       posTempY = positionY
 
       if joueur.body.velocity.x == @globalVelocity
-        posTempX += @epaisseurMur + 4
+        posTempX += @epaisseurMur + difference
         posTempY += i
       else if joueur.body.velocity.x == -@globalVelocity
-        posTempX -= 4
+        posTempX -= difference
         posTempY += i
       else if joueur.body.velocity.y == @globalVelocity
-        posTempY += @epaisseurMur + 4
+        posTempY += @epaisseurMur + difference
         posTempX += i
       else
-        posTempY -= 4
+        posTempY -= difference
         posTempX += i
+
       retour = @bmd.getPixel posTempX, posTempY
 
       if i == 0
@@ -55,15 +59,14 @@ class GamePlay
       if retour.r || retour.g || retour.b
         combien++
 
-    # en gros si les 3/4 de la moto touche un mur..
-    if combien > (3*@epaisseurMur/4)
-      console.log combien
+    # en gros si 1/5 eme de la moto touche un mur..
+    if combien > (@epaisseurMur/5)
       @explode(joueur)
 
 
   explode: (joueur) ->
-    console.log "boum!"
-    #joueur.kill()
+    console.log "boum!" if debug
+    joueur.kill()
 
   constructor: (@game) ->
     console.log 'GamePlay::construct()' if debug
@@ -99,6 +102,7 @@ class GamePlay
     @bmd.context.fillStyle = '#ffffff'
     @bmd.ctx.fill()
     bg = game.add.sprite(0, 0, @bmd);
+
 
     @bmdtest = game.add.bitmapData(game.width, game.height)
     @bmdtest.context.fillStyle = '#00FF00'
@@ -153,5 +157,5 @@ class GamePlay
     if @joueur1.alive
       @collisionTest @joueur1, positionX, positionY
 
-    @bmd.context.fillRect(positionX, positionY, @epaisseurMur, @epaisseurMur);
-    @bmd.dirty = true;
+    @bmd.context.fillRect(positionX, positionY, @epaisseurMur, @epaisseurMur)
+    @bmd.dirty = true
