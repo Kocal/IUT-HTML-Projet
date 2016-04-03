@@ -25,31 +25,35 @@ class GamePlay
     game.physics.arcade.velocityFromAngle(joueur.angle, @globalVelocity, joueur.body.velocity);
 
 
-  collisionTest: (joueur, positionX, positionY) ->
+  collisionTest: (joueur) ->
 
 
 
     @bmd.update()
-    difference = 3
     combien = 0
-    for i in [0..@epaisseurMur-1]
-      posTempX = positionX
-      posTempY = positionY
+    for i in [1..@epaisseurMur-2]
+      posTempX = joueur.x
+      posTempY = joueur.y
+
 
       if joueur.body.velocity.x == @globalVelocity
-        posTempX += @epaisseurMur + difference
+        posTempX += joueur.width/2 + 2
+        posTempY -= joueur.height/2
         posTempY += i
       else if joueur.body.velocity.x == -@globalVelocity
-        posTempX -= difference
+        posTempX -= (joueur.width/2 +2)
+        posTempY -= joueur.height/2
         posTempY += i
       else if joueur.body.velocity.y == @globalVelocity
-        posTempY += @epaisseurMur + difference
+        posTempY += joueur.height/2 + 2
+        posTempX += joueur.width/2
         posTempX += i
       else
-        posTempY -= difference
+        posTempY -= joueur.height/2 + 2
+        posTempX -= joueur.width/2
         posTempX += i
 
-      retour = @bmd.getPixel posTempX, posTempY
+      retour = @bmd.getPixel Math.round(posTempX), Math.round(posTempY)
 
       if retour.r || retour.g || retour.b
         combien++
@@ -144,7 +148,7 @@ class GamePlay
 
 
     if @joueur1.alive
-      @collisionTest @joueur1, positionX, positionY
+      @collisionTest @joueur1
 
     @bmd.context.fillRect(positionX, positionY, @epaisseurMur, @epaisseurMur)
     @bmd.dirty = true

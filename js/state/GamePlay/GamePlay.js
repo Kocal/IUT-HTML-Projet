@@ -31,28 +31,31 @@ GamePlay = (function() {
     return game.physics.arcade.velocityFromAngle(joueur.angle, this.globalVelocity, joueur.body.velocity);
   };
 
-  GamePlay.prototype.collisionTest = function(joueur, positionX, positionY) {
-    var combien, difference, i, j, posTempX, posTempY, ref, retour;
+  GamePlay.prototype.collisionTest = function(joueur) {
+    var combien, i, j, posTempX, posTempY, ref, retour;
     this.bmd.update();
-    difference = 3;
     combien = 0;
-    for (i = j = 0, ref = this.epaisseurMur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-      posTempX = positionX;
-      posTempY = positionY;
+    for (i = j = 1, ref = this.epaisseurMur - 2; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
+      posTempX = joueur.x;
+      posTempY = joueur.y;
       if (joueur.body.velocity.x === this.globalVelocity) {
-        posTempX += this.epaisseurMur + difference;
+        posTempX += joueur.width / 2 + 2;
+        posTempY -= joueur.height / 2;
         posTempY += i;
       } else if (joueur.body.velocity.x === -this.globalVelocity) {
-        posTempX -= difference;
+        posTempX -= joueur.width / 2 + 2;
+        posTempY -= joueur.height / 2;
         posTempY += i;
       } else if (joueur.body.velocity.y === this.globalVelocity) {
-        posTempY += this.epaisseurMur + difference;
+        posTempY += joueur.height / 2 + 2;
+        posTempX += joueur.width / 2;
         posTempX += i;
       } else {
-        posTempY -= difference;
+        posTempY -= joueur.height / 2 + 2;
+        posTempX -= joueur.width / 2;
         posTempX += i;
       }
-      retour = this.bmd.getPixel(posTempX, posTempY);
+      retour = this.bmd.getPixel(Math.round(posTempX), Math.round(posTempY));
       if (retour.r || retour.g || retour.b) {
         combien++;
       }
@@ -137,7 +140,7 @@ GamePlay = (function() {
     positionX = this.joueur1.x - this.epaisseurMur / 2;
     positionY = this.joueur1.y - this.epaisseurMur / 2;
     if (this.joueur1.alive) {
-      this.collisionTest(this.joueur1, positionX, positionY);
+      this.collisionTest(this.joueur1);
     }
     this.bmd.context.fillRect(positionX, positionY, this.epaisseurMur, this.epaisseurMur);
     return this.bmd.dirty = true;
