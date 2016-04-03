@@ -17,7 +17,10 @@
 
 <script>
     var debug = true;
-    var game = new Phaser.Game("90%", "90%", Phaser.AUTO, 'game-container');
+    var width = Math.round(window.innerWidth * 0.9)
+    var height = Math.round(window.innerHeight * 0.9)
+    console.log(width, height)
+    var game = new Phaser.Game(width, height, Phaser.AUTO, 'game-container');
 
     game.state.add("Boot", Boot);
     game.state.add("GameTitle", GameTitle);
