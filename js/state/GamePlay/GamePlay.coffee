@@ -16,7 +16,7 @@ class GamePlay
 
   couleursJ: []
 
-  tickRefresh: 4
+  tickRefresh: 5
   tick: 0
 
   tourne: (joueur, direction) ->
@@ -27,13 +27,12 @@ class GamePlay
 
     game.physics.arcade.velocityFromAngle(joueur.angle, @globalVelocity, joueur.body.velocity);
 
-
   collisionTest: (joueur) ->
     if joueur.x < 0 || joueur.x > game.width || joueur.y < 0 || joueur.y > game.height
       @explode(joueur)
 
 
-    for i in [(-@epaisseurMur/2)-1, (@epaisseurMur/2)-1]
+    for i in [-@epaisseurMur/2, @epaisseurMur/2]
       posTempX = joueur.x
       posTempY = joueur.y
 
@@ -172,16 +171,17 @@ class GamePlay
     bg = game.add.sprite(0, 0, @bmd);
 
 
+    @tickRefresh = 5
+
 
     # les controles seront responsive
     # au format pc, des touches controleront les motos
     # au format smartphone, des boutons le feront
-
     if game.width < 600
+
+      @tickRefresh *= 2
+
       @modeDeJeu = "mobile"
-
-
-    if @modeDeJeu == "mobile"
       # format bouton
 
       # ici on gere les deux boutons
@@ -321,10 +321,12 @@ class GamePlay
   update: ->
     console.log 'GamePlay::update()' if debug
 
+
     @tick++
     if @tick >= @tickRefresh
       @tick=0
       @bmd.update()
+
 
     if @nbMort < @nbJoueur
       for i in [0..@nbJoueur-1]

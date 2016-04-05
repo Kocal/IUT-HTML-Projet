@@ -18,7 +18,7 @@ GamePlay = (function() {
 
   GamePlay.prototype.couleursJ = [];
 
-  GamePlay.prototype.tickRefresh = 4;
+  GamePlay.prototype.tickRefresh = 5;
 
   GamePlay.prototype.tick = 0;
 
@@ -36,7 +36,7 @@ GamePlay = (function() {
     if (joueur.x < 0 || joueur.x > game.width || joueur.y < 0 || joueur.y > game.height) {
       this.explode(joueur);
     }
-    ref = [(-this.epaisseurMur / 2) - 1, (this.epaisseurMur / 2) - 1];
+    ref = [-this.epaisseurMur / 2, this.epaisseurMur / 2];
     results = [];
     for (j = 0, len = ref.length; j < len; j++) {
       i = ref[j];
@@ -162,10 +162,10 @@ GamePlay = (function() {
     }
     this.bmd = game.add.bitmapData(game.width, game.height);
     bg = game.add.sprite(0, 0, this.bmd);
+    this.tickRefresh = 5;
     if (game.width < 600) {
+      this.tickRefresh *= 2;
       this.modeDeJeu = "mobile";
-    }
-    if (this.modeDeJeu === "mobile") {
       spriteG = game.add.sprite(0, 0, 'fleche_gauche1');
       spriteG.scale.setTo(0.2, 0.2);
       spriteD = game.add.sprite(50, 0, 'fleche_droite1');
