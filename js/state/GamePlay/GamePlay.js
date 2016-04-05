@@ -163,9 +163,11 @@ GamePlay = (function() {
     this.bmd = game.add.bitmapData(game.width, game.height);
     bg = game.add.sprite(0, 0, this.bmd);
     this.tickRefresh = 5;
-    if (game.width < 600) {
-      this.tickRefresh *= 2;
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       this.modeDeJeu = "mobile";
+    }
+    if (this.modeDeJeu === "mobile") {
+      this.tickRefresh *= 2;
       spriteG = game.add.sprite(0, 0, 'fleche_gauche1');
       spriteG.scale.setTo(0.2, 0.2);
       spriteD = game.add.sprite(50, 0, 'fleche_droite1');

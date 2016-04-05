@@ -177,11 +177,15 @@ class GamePlay
     # les controles seront responsive
     # au format pc, des touches controleront les motos
     # au format smartphone, des boutons le feront
-    if game.width < 600
 
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
+      @modeDeJeu = "mobile"
+
+
+
+    if @modeDeJeu == "mobile"
       @tickRefresh *= 2
 
-      @modeDeJeu = "mobile"
       # format bouton
 
       # ici on gere les deux boutons
