@@ -8,4 +8,4 @@ class Boot
 
   create: ->
     console.log 'Boot::create()' if debug
-    @game.state.start 'GameTitle'
+    @game.state.start 'GameTitle', true, true

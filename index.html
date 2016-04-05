@@ -9,6 +9,7 @@
 <body>
 <div id="game-container"></div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 <script src="js/phaser.min.js"></script>
 <script src="js/state/Boot/Boot.js"></script>
 <script src="js/state/GameTitle/GameTitle.js"></script>
@@ -26,7 +27,7 @@
     game.state.add("Boot", Boot);
     game.state.add("GameTitle", GameTitle);
     game.state.add("GamePlay", GamePlay);
-    game.state.start("Boot");
+    game.state.start("Boot", true, true);
 </script>
 </body>
 </html>

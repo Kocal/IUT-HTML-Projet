@@ -4,10 +4,6 @@ var GamePlay;
 GamePlay = (function() {
   GamePlay.prototype.joueurs = [];
 
-  GamePlay.prototype.spriteG = null;
-
-  GamePlay.prototype.spriteD = null;
-
   GamePlay.prototype.bmd = null;
 
   GamePlay.prototype.globalVelocity = 100;
@@ -18,7 +14,13 @@ GamePlay = (function() {
 
   GamePlay.prototype.nbMort = 0;
 
+  GamePlay.prototype.modeDeJeu = "pc";
+
   GamePlay.prototype.couleursJ = [];
+
+  GamePlay.prototype.tickRefresh = 5;
+
+  GamePlay.prototype.tick = 0;
 
   GamePlay.prototype.tourne = function(joueur, direction) {
     if (direction === "droite") {
@@ -32,10 +34,9 @@ GamePlay = (function() {
   GamePlay.prototype.collisionTest = function(joueur) {
     var i, j, len, posTempX, posTempY, ref, results, retour;
     if (joueur.x < 0 || joueur.x > game.width || joueur.y < 0 || joueur.y > game.height) {
-      console.log("lol");
       this.explode(joueur);
     }
-    ref = [(-this.epaisseurMur / 2) - 1, (this.epaisseurMur / 2) - 1];
+    ref = [-this.epaisseurMur / 2, this.epaisseurMur / 2];
     results = [];
     for (j = 0, len = ref.length; j < len; j++) {
       i = ref[j];
@@ -88,23 +89,33 @@ GamePlay = (function() {
     if (debug) {
       console.log('GamePlay::preload()');
     }
-    game.load.image('fleche_gauche', 'assets/fleche_gauche.png');
-    return game.load.image('fleche_droite', 'assets/fleche_droite.png');
+    game.load.image('fleche_gauche1', 'assets/fleche_gauche1.png');
+    game.load.image('fleche_droite1', 'assets/fleche_droite1.png');
+    game.load.image('fleche_gauche2', 'assets/fleche_gauche2.png');
+    game.load.image('fleche_droite2', 'assets/fleche_droite2.png');
+    game.load.image('fleche_gauche3', 'assets/fleche_gauche3.png');
+    game.load.image('fleche_droite3', 'assets/fleche_droite3.png');
+    game.load.image('fleche_gauche4', 'assets/fleche_gauche4.png');
+    return game.load.image('fleche_droite4', 'assets/fleche_droite4.png');
   };
 
   GamePlay.prototype.create = function() {
-    var bg, i, j, k, ref, ref1;
+    var bg, btD, btG, i, j, k, ref, ref1, spriteD, spriteG;
     if (debug) {
       console.log('GamePlay::create()');
     }
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.stage.backgroundColor = '#124184';
+    this.nbMort = 0;
     this.nbJoueur = 4;
     this.couleursJ = new Array(4);
     this.couleursJ[0] = '#00ff00';
     this.couleursJ[1] = '#00ffff';
     this.couleursJ[2] = '#ff00ff';
     this.couleursJ[3] = '#ffff00';
+    if (this.joueurs) {
+      this.joueurs = [];
+    }
     for (i = j = 0, ref = this.nbJoueur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
       this.joueurs.push(game.add.sprite(0, 0, null));
       this.joueurs[i].width = this.epaisseurMur;
@@ -151,14 +162,82 @@ GamePlay = (function() {
     }
     this.bmd = game.add.bitmapData(game.width, game.height);
     bg = game.add.sprite(0, 0, this.bmd);
-    this.spriteG = game.add.sprite(0, 0, 'fleche_gauche');
-    this.spriteG.scale.setTo(0.2, 0.2);
-    this.spriteD = game.add.sprite(50, 0, 'fleche_droite');
-    this.spriteD.scale.setTo(0.2, 0.2);
-    this.spriteG.inputEnabled = true;
-    this.spriteG.events.onInputDown.add(this.listenerBoutonG1, this);
-    this.spriteD.inputEnabled = true;
-    return this.spriteD.events.onInputDown.add(this.listenerBoutonD1, this);
+    this.tickRefresh = 5;
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      this.modeDeJeu = "mobile";
+    }
+    if (this.modeDeJeu === "mobile") {
+      this.tickRefresh *= 2;
+      spriteG = game.add.sprite(0, 0, 'fleche_gauche1');
+      spriteG.scale.setTo(0.2, 0.2);
+      spriteD = game.add.sprite(50, 0, 'fleche_droite1');
+      spriteD.scale.setTo(0.2, 0.2);
+      spriteG.inputEnabled = true;
+      spriteG.events.onInputDown.add(this.listenerBoutonG1, this);
+      spriteD.inputEnabled = true;
+      spriteD.events.onInputDown.add(this.listenerBoutonD1, this);
+      if (this.nbJoueur >= 2) {
+        spriteG = game.add.sprite(0, 0, 'fleche_gauche2');
+        spriteG.scale.setTo(0.2, 0.2);
+        spriteG.x = game.width - (spriteG.width * 2);
+        spriteD = game.add.sprite(50, 0, 'fleche_droite2');
+        spriteD.scale.setTo(0.2, 0.2);
+        spriteD.x = game.width - spriteG.width;
+        spriteG.inputEnabled = true;
+        spriteG.events.onInputDown.add(this.listenerBoutonG2, this);
+        spriteD.inputEnabled = true;
+        spriteD.events.onInputDown.add(this.listenerBoutonD2, this);
+        if (this.nbJoueur >= 3) {
+          spriteG = game.add.sprite(0, 0, 'fleche_gauche3');
+          spriteG.scale.setTo(0.2, 0.2);
+          spriteG.y = game.height - spriteG.height;
+          spriteD = game.add.sprite(50, 0, 'fleche_droite3');
+          spriteD.scale.setTo(0.2, 0.2);
+          spriteD.y = game.height - spriteG.height;
+          spriteG.inputEnabled = true;
+          spriteG.events.onInputDown.add(this.listenerBoutonG3, this);
+          spriteD.inputEnabled = true;
+          spriteD.events.onInputDown.add(this.listenerBoutonD3, this);
+          if (this.nbJoueur === 4) {
+            spriteG = game.add.sprite(0, 0, 'fleche_gauche4');
+            spriteG.scale.setTo(0.2, 0.2);
+            spriteG.x = game.width - (spriteG.width * 2);
+            spriteG.y = game.height - spriteG.height;
+            spriteD = game.add.sprite(50, 0, 'fleche_droite4');
+            spriteD.scale.setTo(0.2, 0.2);
+            spriteD.x = game.width - spriteG.width;
+            spriteD.y = game.height - spriteG.height;
+            spriteG.inputEnabled = true;
+            spriteG.events.onInputDown.add(this.listenerBoutonG4, this);
+            spriteD.inputEnabled = true;
+            return spriteD.events.onInputDown.add(this.listenerBoutonD4, this);
+          }
+        }
+      }
+    } else {
+      btG = this.input.keyboard.addKey(Phaser.Keyboard.A);
+      btG.onDown.add(this.listenerBoutonG1, this);
+      btD = this.input.keyboard.addKey(Phaser.Keyboard.Z);
+      btD.onDown.add(this.listenerBoutonD1, this);
+      if (this.nbJoueur >= 2) {
+        btG = this.input.keyboard.addKey(Phaser.Keyboard.T);
+        btG.onDown.add(this.listenerBoutonG2, this);
+        btD = this.input.keyboard.addKey(Phaser.Keyboard.Y);
+        btD.onDown.add(this.listenerBoutonD2, this);
+        if (this.nbJoueur >= 3) {
+          btG = this.input.keyboard.addKey(Phaser.Keyboard.O);
+          btG.onDown.add(this.listenerBoutonG3, this);
+          btD = this.input.keyboard.addKey(Phaser.Keyboard.P);
+          btD.onDown.add(this.listenerBoutonD3, this);
+          if (this.nbJoueur === 4) {
+            btG = this.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+            btG.onDown.add(this.listenerBoutonG4, this);
+            btD = this.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+            return btD.onDown.add(this.listenerBoutonD4, this);
+          }
+        }
+      }
+    }
   };
 
   GamePlay.prototype.listenerBoutonG1 = function() {
@@ -175,13 +254,64 @@ GamePlay = (function() {
     return this.tourne(this.joueurs[0], "droite");
   };
 
+  GamePlay.prototype.listenerBoutonG2 = function() {
+    if (debug) {
+      console.log("bonton gauche");
+    }
+    return this.tourne(this.joueurs[1], "gauche");
+  };
+
+  GamePlay.prototype.listenerBoutonD2 = function() {
+    if (debug) {
+      console.log("bonton droit");
+    }
+    return this.tourne(this.joueurs[1], "droite");
+  };
+
+  GamePlay.prototype.listenerBoutonG3 = function() {
+    if (debug) {
+      console.log("bonton gauche");
+    }
+    return this.tourne(this.joueurs[2], "gauche");
+  };
+
+  GamePlay.prototype.listenerBoutonD3 = function() {
+    if (debug) {
+      console.log("bonton droit");
+    }
+    return this.tourne(this.joueurs[2], "droite");
+  };
+
+  GamePlay.prototype.listenerBoutonG4 = function() {
+    if (debug) {
+      console.log("bonton gauche");
+    }
+    return this.tourne(this.joueurs[3], "gauche");
+  };
+
+  GamePlay.prototype.listenerBoutonD4 = function() {
+    if (debug) {
+      console.log("bonton droit");
+    }
+    return this.tourne(this.joueurs[3], "droite");
+  };
+
+  GamePlay.prototype.winnerScreen = function() {
+    console.log("bonjour");
+    return game.state.start(game.state.current, true, true, this.nbJoueur);
+  };
+
   GamePlay.prototype.update = function() {
     var i, j, positionX, positionY, ref, results;
     if (debug) {
       console.log('GamePlay::update()');
     }
-    if (this.nbMort < this.nbJoueur) {
+    this.tick++;
+    if (this.tick >= this.tickRefresh) {
+      this.tick = 0;
       this.bmd.update();
+    }
+    if (this.nbMort < this.nbJoueur) {
       results = [];
       for (i = j = 0, ref = this.nbJoueur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
         if (this.joueurs[i].alive) {
@@ -197,6 +327,8 @@ GamePlay = (function() {
         }
       }
       return results;
+    } else {
+      return this.winnerScreen();
     }
   };
 
