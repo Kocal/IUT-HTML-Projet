@@ -16,6 +16,8 @@ GamePlay = (function() {
 
   GamePlay.prototype.nbJoueur = 1;
 
+  GamePlay.prototype.nbMort = 0;
+
   GamePlay.prototype.couleursJ = [];
 
   GamePlay.prototype.tourne = function(joueur, direction) {
@@ -28,32 +30,46 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.collisionTest = function(joueur) {
-    var posTempX, posTempY, retour;
+    var i, j, len, posTempX, posTempY, ref, results, retour;
     if (joueur.x < 0 || joueur.x > game.width || joueur.y < 0 || joueur.y > game.height) {
       console.log("lol");
       this.explode(joueur);
     }
-    posTempX = joueur.x;
-    posTempY = joueur.y;
-    if (joueur.body.velocity.x > 1) {
-      posTempX += joueur.width / 2 + 2;
-    } else if (joueur.body.velocity.x < -1) {
-      posTempX -= joueur.width / 2 + 2;
-    } else if (joueur.body.velocity.y > 1) {
-      posTempY += joueur.height / 2 + 2;
-    } else {
-      posTempY -= joueur.height / 2 + 2;
+    ref = [(-this.epaisseurMur / 2) - 1, (this.epaisseurMur / 2) - 1];
+    results = [];
+    for (j = 0, len = ref.length; j < len; j++) {
+      i = ref[j];
+      posTempX = joueur.x;
+      posTempY = joueur.y;
+      if (joueur.body.velocity.x > 1) {
+        posTempX += joueur.width / 2 + 2;
+        posTempY += i;
+      } else if (joueur.body.velocity.x < -1) {
+        posTempX -= joueur.width / 2 + 2;
+        posTempY += i;
+      } else if (joueur.body.velocity.y > 1) {
+        posTempY += joueur.height / 2 + 2;
+        posTempX += i;
+      } else {
+        posTempY -= joueur.height / 2 + 2;
+        posTempX += i;
+      }
+      retour = this.bmd.getPixel(Math.round(posTempX), Math.round(posTempY));
+      if (retour.a !== 0) {
+        this.explode(joueur);
+        break;
+      } else {
+        results.push(void 0);
+      }
     }
-    retour = this.bmd.getPixel(Math.round(posTempX), Math.round(posTempY));
-    if (retour.a !== 0) {
-      return this.explode(joueur);
-    }
+    return results;
   };
 
   GamePlay.prototype.explode = function(joueur) {
     if (debug) {
       console.log("boum!");
     }
+    this.nbMort++;
     return joueur.kill();
   };
 
@@ -164,20 +180,24 @@ GamePlay = (function() {
     if (debug) {
       console.log('GamePlay::update()');
     }
-    this.bmd.update();
-    results = [];
-    for (i = j = 0, ref = this.nbJoueur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
-      positionX = this.joueurs[i].x - this.epaisseurMur / 2;
-      positionY = this.joueurs[i].y - this.epaisseurMur / 2;
-      this.bmd.context.fillStyle = this.couleursJ[i];
-      this.bmd.ctx.fill();
-      if (this.joueurs[i].alive) {
-        this.collisionTest(this.joueurs[i]);
+    if (this.nbMort < this.nbJoueur) {
+      this.bmd.update();
+      results = [];
+      for (i = j = 0, ref = this.nbJoueur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+        if (this.joueurs[i].alive) {
+          positionX = this.joueurs[i].x - this.epaisseurMur / 2;
+          positionY = this.joueurs[i].y - this.epaisseurMur / 2;
+          this.bmd.context.fillStyle = this.couleursJ[i];
+          this.bmd.ctx.fill();
+          this.collisionTest(this.joueurs[i]);
+          this.bmd.context.fillRect(positionX, positionY, this.epaisseurMur, this.epaisseurMur);
+          results.push(this.bmd.dirty = true);
+        } else {
+          results.push(void 0);
+        }
       }
-      this.bmd.context.fillRect(positionX, positionY, this.epaisseurMur, this.epaisseurMur);
-      results.push(this.bmd.dirty = true);
+      return results;
     }
-    return results;
   };
 
   return GamePlay;

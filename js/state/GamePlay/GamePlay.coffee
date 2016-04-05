@@ -13,6 +13,7 @@ class GamePlay
   epaisseurMur : 10
 
   nbJoueur : 1
+  nbMort: 0
 
   couleursJ: []
 
@@ -34,25 +35,32 @@ class GamePlay
       @explode(joueur)
 
 
-    posTempX = joueur.x
-    posTempY = joueur.y
+    for i in [(-@epaisseurMur/2)-1, (@epaisseurMur/2)-1]
+      posTempX = joueur.x
+      posTempY = joueur.y
 
-    if joueur.body.velocity.x > 1
-      posTempX += joueur.width/2+2
-    else if joueur.body.velocity.x < -1
-      posTempX -= joueur.width/2 +2
-    else if joueur.body.velocity.y > 1
-      posTempY += joueur.height/2+2
-    else
-      posTempY -= joueur.height/2 + 2
+      if joueur.body.velocity.x > 1
+        posTempX += joueur.width/2+2
+        posTempY += i
+      else if joueur.body.velocity.x < -1
+        posTempX -= joueur.width/2 +2
+        posTempY += i
+      else if joueur.body.velocity.y > 1
+        posTempY += joueur.height/2+2
+        posTempX += i
+      else
+        posTempY -= joueur.height/2 + 2
+        posTempX += i
 
-    retour = @bmd.getPixel Math.round(posTempX), Math.round(posTempY)
+      retour = @bmd.getPixel Math.round(posTempX), Math.round(posTempY)
 
-    if retour.a != 0
-      @explode joueur
+      if retour.a != 0
+        @explode joueur
+        break
 
   explode: (joueur) ->
     console.log "boum!" if debug
+    @nbMort++
     joueur.kill()
 
   constructor: (@game) ->
@@ -187,20 +195,17 @@ class GamePlay
   update: ->
     console.log 'GamePlay::update()' if debug
 
+    if @nbMort < @nbJoueur
+      @bmd.update()
+      for i in [0..@nbJoueur-1]
+        if @joueurs[i].alive
+          positionX = @joueurs[i].x - @epaisseurMur/2
+          positionY = @joueurs[i].y - @epaisseurMur/2
 
+          @bmd.context.fillStyle = @couleursJ[i]
+          @bmd.ctx.fill()
 
-    @bmd.update()
-    
-    for i in [0..@nbJoueur-1]
-      positionX = @joueurs[i].x - @epaisseurMur/2
-      positionY = @joueurs[i].y - @epaisseurMur/2
+          @collisionTest @joueurs[i]
 
-      @bmd.context.fillStyle = @couleursJ[i]
-      @bmd.ctx.fill()
-
-
-      if @joueurs[i].alive
-        @collisionTest @joueurs[i]
-
-      @bmd.context.fillRect(positionX, positionY, @epaisseurMur, @epaisseurMur)
-      @bmd.dirty = true
+          @bmd.context.fillRect(positionX, positionY, @epaisseurMur, @epaisseurMur)
+          @bmd.dirty = true
