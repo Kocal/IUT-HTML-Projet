@@ -16,6 +16,9 @@ class GamePlay
 
   couleursJ: []
 
+  tickRefresh: 4
+  tick: 0
+
   tourne: (joueur, direction) ->
     if direction == "droite"
       joueur.angle += 90
@@ -101,7 +104,7 @@ class GamePlay
 
 
     if @joueurs
-      @joueurs.clear()
+      @joueurs = []
 
     for i in [0..@nbJoueur-1]
       @joueurs.push game.add.sprite(0, 0, null) # on ne sprite pas le sprite x)
@@ -318,8 +321,12 @@ class GamePlay
   update: ->
     console.log 'GamePlay::update()' if debug
 
-    if @nbMort < @nbJoueur
+    @tick++
+    if @tick >= @tickRefresh
+      @tick=0
       @bmd.update()
+
+    if @nbMort < @nbJoueur
       for i in [0..@nbJoueur-1]
         if @joueurs[i].alive
           positionX = @joueurs[i].x - @epaisseurMur/2

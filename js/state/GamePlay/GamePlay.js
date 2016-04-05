@@ -18,6 +18,10 @@ GamePlay = (function() {
 
   GamePlay.prototype.couleursJ = [];
 
+  GamePlay.prototype.tickRefresh = 4;
+
+  GamePlay.prototype.tick = 0;
+
   GamePlay.prototype.tourne = function(joueur, direction) {
     if (direction === "droite") {
       joueur.angle += 90;
@@ -110,7 +114,7 @@ GamePlay = (function() {
     this.couleursJ[2] = '#ff00ff';
     this.couleursJ[3] = '#ffff00';
     if (this.joueurs) {
-      this.joueurs.clear();
+      this.joueurs = [];
     }
     for (i = j = 0, ref = this.nbJoueur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
       this.joueurs.push(game.add.sprite(0, 0, null));
@@ -300,8 +304,12 @@ GamePlay = (function() {
     if (debug) {
       console.log('GamePlay::update()');
     }
-    if (this.nbMort < this.nbJoueur) {
+    this.tick++;
+    if (this.tick >= this.tickRefresh) {
+      this.tick = 0;
       this.bmd.update();
+    }
+    if (this.nbMort < this.nbJoueur) {
       results = [];
       for (i = j = 0, ref = this.nbJoueur - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
         if (this.joueurs[i].alive) {
