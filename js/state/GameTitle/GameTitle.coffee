@@ -18,6 +18,9 @@ class GameTitle
   create: ->
     console.log 'GameTitle::create()' if debug
 
+    #couleur de fond
+    game.stage.backgroundColor = '#000000'
+
     @randomGenerator = new Phaser.RandomDataGenerator
 
     # Ajout de la texture qui accueillera les tracés lumineux
@@ -59,7 +62,7 @@ class GameTitle
 
   onButtonPlayClick: ->
     console.log 'Jouer'
-    @game.state.start 'GamePlay', true, false, 4
+    @game.state.start 'GamePlay', true, true, 4
 
     return
 

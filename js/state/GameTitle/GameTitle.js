@@ -2,8 +2,8 @@
 var GameTitle;
 
 GameTitle = (function() {
-  function GameTitle(game) {
-    this.game = game;
+  function GameTitle(game1) {
+    this.game = game1;
     if (debug) {
       console.log('GameTitle::constructor()');
     }
@@ -24,6 +24,7 @@ GameTitle = (function() {
     if (debug) {
       console.log('GameTitle::create()');
     }
+    game.stage.backgroundColor = '#000000';
     this.randomGenerator = new Phaser.RandomDataGenerator;
     this.texture = this.game.add.renderTexture(this.game.world.width, this.game.world.height, 'mousetrail');
     this.game.add.sprite(0, 0, this.texture);
@@ -60,7 +61,7 @@ GameTitle = (function() {
 
   GameTitle.prototype.onButtonPlayClick = function() {
     console.log('Jouer');
-    this.game.state.start('GamePlay', true, false, 4);
+    this.game.state.start('GamePlay', true, true, 4);
   };
 
   GameTitle.prototype._initATrace = function() {

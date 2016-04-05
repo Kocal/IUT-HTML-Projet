@@ -19,7 +19,7 @@ Boot = (function() {
     if (debug) {
       console.log('Boot::create()');
     }
-    return this.game.state.start('GameTitle');
+    return this.game.state.start('GameTitle', true, true);
   };
 
   return Boot;
