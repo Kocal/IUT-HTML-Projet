@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <meta name="viewport" content="width=device-width">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="./js/site.js"></script>
     
     <link href='https://fonts.googleapis.com/css?family=Orbitron|Russo+One|Audiowide|Syncopate' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/site.js"></script>
 </head>
 <body>
     
@@ -18,10 +19,10 @@
     
     <nav>
         <div class="container">
-            <a href="#projet">LE PROJET</a>
-            <a href="#technos">TECHNOLOGIES</a>
-            <a href="#demo">DÉMO</a>
-            <a href="#createur">LES CRÉATEURS</a>
+            <a href="#projet" class="js-scrollTo">LE PROJET</a>
+            <a href="#technos" class="js-scrollTo">TECHNOLOGIES</a>
+            <a href="#demo" class="js-scrollTo">DÉMO</a>
+            <a href="#createur" class="js-scrollTo">LES CRÉATEURS</a>
         </div>
     </nav>
     
@@ -29,20 +30,22 @@
         <h1><initial class="blue">L</initial>E <initial class="orange">P</initial>ROJET</h1>
         
         <h2>L'IDÉE</h2>
-        <p>Cyprum itidem insulam procul a continenti discretam et portuosam inter municipia crebra urbes duae faciunt claram Salamis et Paphus, altera Iovis delubris altera Veneris templo insignis. tanta autem tamque multiplici fertilitate abundat rerum omnium eadem Cyprus ut nullius externi indigens adminiculi indigenis viribus a fundamento ipso carinae ad supremos usque carbasos aedificet onerariam navem omnibusque armamentis instructam mari committat.</p>
+        <p>L'idée de base est de céer un jeu de TRON avec les technologies du web mises à notre disposition.<br />
+        Rapidement un jeu de TRON quest-ce que c'est ?<br /> C'est un jeu en multijoueur où les participant pilotes des engins qui tracent des lignes mortelles pour ses adversaires. Le but est donc de rester en vie le plus longtemps possible et d'être le dernier survivant du jeu.</p>
         
         <h2>LE CADRE</h2>
-        <p>Cyprum itidem insulam procul a continenti discretam et portuosam inter municipia crebra urbes duae faciunt claram Salamis et Paphus, altera Iovis delubris altera Veneris templo insignis. tanta autem tamque multiplici fertilitate abundat rerum omnium eadem Cyprus ut nullius externi indigens adminiculi indigenis viribus a fundamento ipso carinae ad supremos usque carbasos aedificet onerariam navem omnibusque armamentis instructam mari committat.</p>
+        <p>Nous avons réalisé ce projet dans le cadre d'un projet de DUT informatique. Le projet avait pour énoncé de créer un jeu avec les technologies web de base JavaScript et HTML.</p>
     </article>
     
     <article id="technos">
         <h1><initial class="blue">T</initial>ECHNOLOGIE<initial class="orange">S</initial></h1>
         
         <h2>LANGUAGES</h2>
-        <p>Cyprum itidem insulam procul a continenti discretam et portuosam inter municipia crebra urbes duae faciunt claram Salamis et Paphus, altera Iovis delubris altera Veneris templo insignis. tanta autem tamque multiplici fertilitate abundat rerum omnium eadem Cyprus ut nullius externi indigens adminiculi indigenis viribus a fundamento ipso carinae ad supremos usque carbasos aedificet onerariam navem omnibusque armamentis instructam mari committat.</p>
+        <p>Nous avons essentielement utilisé JavaScript pour réaliser ce jeu.</p>
         
-        <h2>FRAMEWORK</h2>
-        <p>Cyprum itidem insulam procul a continenti discretam et portuosam inter municipia crebra urbes duae faciunt claram Salamis et Paphus, altera Iovis delubris altera Veneris templo insignis. tanta autem tamque multiplici fertilitate abundat rerum omnium eadem Cyprus ut nullius externi indigens adminiculi indigenis viribus a fundamento ipso carinae ad supremos usque carbasos aedificet onerariam navem omnibusque armamentis instructam mari committat.</p>
+        <h2>FRAMEWORK/LIBRAIRIES</h2>
+        <p>Pour faciliter la programmation du jeu, nous avons utilisé une "grosse" librairie du non de PHASER qui est spécialisé dans la céation de jeu en JavaScript.<br />
+        Ensuite encore pour facilité la syntaxe du code JavaScript nous avons utilisé CoffeeScript qui est un "sucre syntaxique" permettant de simplifier la lecture et l'écriture de code JavaScript.</p>
     </article>
     
     <article id="demo">
@@ -53,6 +56,21 @@
     
     <article id="createur">
         <h1><initial class="blue">L</initial>ES <initial class="orange">C</initial>RÉATEURS</h1>
+        <div class="container-img">
+            <figure class="img">
+                <img src="img/hugo.jpg" alt="Hugo Alliaume"/>
+                <figcaption>Hugo Alliaume</figcaption>
+            </figure>
+            <figure class="img">
+                <img src="img/eddy.jpg" alt="Eddie Barraco"/>
+                <figcaption>Eddie Barraco</figcaption>
+            </figure>
+            <figure class="img">
+                <img src="img/alan.jpg" alt="Alan Ridard"/>
+                <figcaption>Alan Ridard</figcaption>
+            </figure>
+            
+        </div>
     </article>
     
 

@@ -127,3 +127,25 @@ article p{
     text-align: justify;
 }
 
+#createur .container-img{
+    width: 70%;
+    margin-left: 15%;
+    margin: auto;
+}
+
+#createur .img{
+    display: inline-block;
+    width: 200px;
+    height: 250px;
+    padding-left: 5%;
+}
+
+#createur .img figcaption{
+    text-align: left;
+}
+
+#createur img{
+    width: 200px;
+    height: 200px;
+}
+
