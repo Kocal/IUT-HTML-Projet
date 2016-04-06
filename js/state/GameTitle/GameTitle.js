@@ -2,35 +2,95 @@
 var GameTitle;
 
 GameTitle = (function() {
-  function GameTitle(game) {
-    this.game = game;
+  function GameTitle(game1) {
+    this.game = game1;
     if (debug) {
       console.log('GameTitle::constructor()');
     }
+    this.buttonsPlayer = ['buttonOnePlayer', 'buttonTwoPlayers', 'buttonThreePlayers', 'buttonFourPlayers'];
   }
 
   GameTitle.prototype.preload = function() {
+    var buttonPlayer, j, len, ref;
     if (debug) {
-      return console.log('GameTitle::preload()');
+      console.log('GameTitle::preload()');
     }
+    this.game.load.image('logo', '/assets/img/logo.png');
+    ref = this.buttonsPlayer;
+    for (j = 0, len = ref.length; j < len; j++) {
+      buttonPlayer = ref[j];
+      this.game.load.image(buttonPlayer, "/assets/img/" + buttonPlayer + ".png");
+    }
+    this.game.load.image('orangeTrace', '/assets/img/orangeTrace.png');
+    this.game.load.image('blueTrace', '/assets/img/blueTrace.png');
   };
 
   GameTitle.prototype.create = function() {
+    var buttonPlayer, i, j, k, len, ref, self, y;
     if (debug) {
       console.log('GameTitle::create()');
     }
-    this.buttonPlay = this.game.add.button(this.game.world.centerX, this.game.world.centerY, 'button', this.onButtonPlayClick, this, 0, 1, 2);
-    return this.buttonPlay.anchor.setTo(0.5, 0.5);
-  };
-
-  GameTitle.prototype.update = function() {
-    if (debug) {
-      return console.log('GameTitle::update()');
+    self = this;
+    this.sButtonPlay = void 0;
+    game.stage.backgroundColor = '#000000';
+    this.randomGenerator = new Phaser.RandomDataGenerator;
+    this.texture = this.game.add.renderTexture(this.game.world.width, this.game.world.height, 'mousetrail');
+    this.game.add.sprite(0, 0, this.texture);
+    this.traces = this.game.make.group();
+    for (i = j = 0; j <= 5; i = ++j) {
+      this.traces.add(this._initATrace());
+    }
+    this.game.time.events.loop(5000, (function(_this) {
+      return function() {
+        return _this.traces.add(_this._initATrace());
+      };
+    })(this), this);
+    this.sLogo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY - 100, 'logo');
+    this.sLogo.anchor.setTo(0.5, 1);
+    ref = this.buttonsPlayer;
+    for (i = k = 0, len = ref.length; k < len; i = ++k) {
+      buttonPlayer = ref[i];
+      y = this.sButtonPlay != null ? this.sButtonPlay.y : this.sLogo.y;
+      this.sButtonPlay = this.game.add.button(this.game.world.centerX, y + 60, buttonPlayer, (function(i) {
+        return function() {
+          return self.onButtonPlayClick(i + 1);
+        };
+      })(i), this, 0, 1, 2);
+      this.sButtonPlay.anchor.setTo(0.5, -1);
     }
   };
 
-  GameTitle.prototype.onButtonPlayClick = function() {
-    return console.log('Jouer');
+  GameTitle.prototype.update = function() {
+    var j, len, ref, trace;
+    if (debug) {
+      console.log('GameTitle::update()');
+    }
+    ref = this.traces.children;
+    for (j = 0, len = ref.length; j < len; j++) {
+      trace = ref[j];
+      this.texture.renderXY(trace, trace.x, trace.y);
+      if (trace.x >= this.game.width || trace.y >= this.game.height) {
+        trace.x = Math.random() * this.game.width;
+        trace.y = 0;
+      }
+    }
+  };
+
+  GameTitle.prototype.onButtonPlayClick = function(players) {
+    console.log(players);
+    this.game.state.start('GamePlay', true, true, players);
+  };
+
+  GameTitle.prototype._initATrace = function() {
+    var isOrange, trace, x, y;
+    isOrange = Math.random() >= 0.5;
+    x = Math.random() * this.game.width;
+    y = Math.random() * -150;
+    trace = this.game.make.sprite(x, y, isOrange ? 'orangeTrace' : 'blueTrace');
+    this.game.physics.enable(trace, Phaser.Physics.ARCADE);
+    trace.anchor.setTo(0.5);
+    trace.body.velocity.y = 30;
+    return trace;
   };
 
   return GameTitle;
