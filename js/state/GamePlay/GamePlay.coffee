@@ -96,7 +96,8 @@ class GamePlay
   create: ->
     console.log 'GamePlay::create()' if debug
 
-
+    @epaisseurMur = Math.round(game.width / 100)
+    
     # initialisation de la physique
     game.physics.startSystem Phaser.Physics.ARCADE
 
@@ -194,7 +195,6 @@ class GamePlay
 
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )
       @modeDeJeu = "mobile"
-
 
 
     if @modeDeJeu == "mobile"

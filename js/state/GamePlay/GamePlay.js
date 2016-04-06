@@ -112,6 +112,7 @@ GamePlay = (function() {
     if (debug) {
       console.log('GamePlay::create()');
     }
+    this.epaisseurMur = Math.round(game.width / 100);
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.stage.backgroundColor = '#124184';
     this.nbMort = 0;
