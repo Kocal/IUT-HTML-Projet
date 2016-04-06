@@ -68,17 +68,29 @@ class GamePlay
 
   preload: ->
     console.log 'GamePlay::preload()' if debug
-    game.load.image 'fleche_gauche1', 'assets/fleche_gauche1.png'
-    game.load.image 'fleche_droite1', 'assets/fleche_droite1.png'
+    game.load.image 'fleche_gauche1', 'assets/img/fleche_gauche1.png'
+    game.load.image 'fleche_droite1', 'assets/img/fleche_droite1.png'
 
-    game.load.image 'fleche_gauche2', 'assets/fleche_gauche2.png'
-    game.load.image 'fleche_droite2', 'assets/fleche_droite2.png'
+    game.load.image 'fleche_gauche2', 'assets/img/fleche_gauche2.png'
+    game.load.image 'fleche_droite2', 'assets/img/fleche_droite2.png'
 
-    game.load.image 'fleche_gauche3', 'assets/fleche_gauche3.png'
-    game.load.image 'fleche_droite3', 'assets/fleche_droite3.png'
+    game.load.image 'fleche_gauche3', 'assets/img/fleche_gauche3.png'
+    game.load.image 'fleche_droite3', 'assets/img/fleche_droite3.png'
 
-    game.load.image 'fleche_gauche4', 'assets/fleche_gauche4.png'
-    game.load.image 'fleche_droite4', 'assets/fleche_droite4.png'
+    game.load.image 'fleche_gauche4', 'assets/img/fleche_gauche4.png'
+    game.load.image 'fleche_droite4', 'assets/img/fleche_droite4.png'
+
+    game.load.image 'touche_a', 'assets/img/A.png'
+    game.load.image 'touche_z', 'assets/img/Z.png'
+
+    game.load.image 'touche_t', 'assets/img/T.png'
+    game.load.image 'touche_y', 'assets/img/Y.png'
+
+    game.load.image 'touche_o', 'assets/img/O.png'
+    game.load.image 'touche_p', 'assets/img/P.png'
+
+    game.load.image 'touche_g', 'assets/img/G.png'
+    game.load.image 'touche_d', 'assets/img/D.png'
 
 
   create: ->
@@ -92,7 +104,6 @@ class GamePlay
     game.stage.backgroundColor = '#124184'
 
     @nbMort = 0
-    @nbJoueur = 4
 
     @couleursJ = new Array(4)
 
@@ -170,6 +181,9 @@ class GamePlay
     @bmd = game.add.bitmapData(game.width, game.height)
     bg = game.add.sprite(0, 0, @bmd);
 
+
+    btEchap = this.input.keyboard.addKey(Phaser.Keyboard.ESC)
+    btEchap.onDown.add(@leaveGave, this)
 
     @tickRefresh = 5
 
@@ -264,12 +278,20 @@ class GamePlay
       btD = this.input.keyboard.addKey(Phaser.Keyboard.Z)
       btD.onDown.add(@listenerBoutonD1, this)
 
+      sprite = game.add.sprite(0, 0, 'touche_a')
+
+      sprite = game.add.sprite(sprite.width, 0, 'touche_z')
+
       if @nbJoueur >= 2
         btG = this.input.keyboard.addKey(Phaser.Keyboard.T)
         btG.onDown.add(@listenerBoutonG2, this)
 
         btD = this.input.keyboard.addKey(Phaser.Keyboard.Y)
         btD.onDown.add(@listenerBoutonD2, this)
+
+        sprite = game.add.sprite(game.width - sprite.width*2, 0, 'touche_t')
+
+        sprite = game.add.sprite(game.width - sprite.width, 0, 'touche_y')
 
         if @nbJoueur >= 3
           btG = this.input.keyboard.addKey(Phaser.Keyboard.O)
@@ -278,12 +300,19 @@ class GamePlay
           btD = this.input.keyboard.addKey(Phaser.Keyboard.P)
           btD.onDown.add(@listenerBoutonD3, this)
 
+          sprite = game.add.sprite(0, game.height-sprite.height, 'touche_o')
+
+          sprite = game.add.sprite(sprite.width, game.height-sprite.height, 'touche_p')
+
           if @nbJoueur == 4
             btG = this.input.keyboard.addKey(Phaser.Keyboard.LEFT)
             btG.onDown.add(@listenerBoutonG4, this)
 
             btD = this.input.keyboard.addKey(Phaser.Keyboard.RIGHT)
             btD.onDown.add(@listenerBoutonD4, this)
+
+            sprite = game.add.sprite(game.width - sprite.width, game.height-sprite.height, 'touche_g')
+            sprite = game.add.sprite(game.width - sprite.width*2, sprite.y, 'touche_d')
 
 
   listenerBoutonG1: () ->
@@ -319,8 +348,10 @@ class GamePlay
     @tourne @joueurs[3], "droite"
 
   winnerScreen: () ->
-    console.log "bonjour"
     game.state.start(game.state.current, true, true, @nbJoueur)
+
+  leaveGave: () ->
+    game.state.start 'GameTitle', true, true
 
   update: ->
     console.log 'GamePlay::update()' if debug

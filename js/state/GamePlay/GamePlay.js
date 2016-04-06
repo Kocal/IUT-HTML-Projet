@@ -89,25 +89,32 @@ GamePlay = (function() {
     if (debug) {
       console.log('GamePlay::preload()');
     }
-    game.load.image('fleche_gauche1', 'assets/fleche_gauche1.png');
-    game.load.image('fleche_droite1', 'assets/fleche_droite1.png');
-    game.load.image('fleche_gauche2', 'assets/fleche_gauche2.png');
-    game.load.image('fleche_droite2', 'assets/fleche_droite2.png');
-    game.load.image('fleche_gauche3', 'assets/fleche_gauche3.png');
-    game.load.image('fleche_droite3', 'assets/fleche_droite3.png');
-    game.load.image('fleche_gauche4', 'assets/fleche_gauche4.png');
-    return game.load.image('fleche_droite4', 'assets/fleche_droite4.png');
+    game.load.image('fleche_gauche1', 'assets/img/fleche_gauche1.png');
+    game.load.image('fleche_droite1', 'assets/img/fleche_droite1.png');
+    game.load.image('fleche_gauche2', 'assets/img/fleche_gauche2.png');
+    game.load.image('fleche_droite2', 'assets/img/fleche_droite2.png');
+    game.load.image('fleche_gauche3', 'assets/img/fleche_gauche3.png');
+    game.load.image('fleche_droite3', 'assets/img/fleche_droite3.png');
+    game.load.image('fleche_gauche4', 'assets/img/fleche_gauche4.png');
+    game.load.image('fleche_droite4', 'assets/img/fleche_droite4.png');
+    game.load.image('touche_a', 'assets/img/A.png');
+    game.load.image('touche_z', 'assets/img/Z.png');
+    game.load.image('touche_t', 'assets/img/T.png');
+    game.load.image('touche_y', 'assets/img/Y.png');
+    game.load.image('touche_o', 'assets/img/O.png');
+    game.load.image('touche_p', 'assets/img/P.png');
+    game.load.image('touche_g', 'assets/img/G.png');
+    return game.load.image('touche_d', 'assets/img/D.png');
   };
 
   GamePlay.prototype.create = function() {
-    var bg, btD, btG, i, j, k, ref, ref1, spriteD, spriteG;
+    var bg, btD, btEchap, btG, i, j, k, ref, ref1, sprite, spriteD, spriteG;
     if (debug) {
       console.log('GamePlay::create()');
     }
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.stage.backgroundColor = '#124184';
     this.nbMort = 0;
-    this.nbJoueur = 4;
     this.couleursJ = new Array(4);
     this.couleursJ[0] = '#00ff00';
     this.couleursJ[1] = '#00ffff';
@@ -162,6 +169,8 @@ GamePlay = (function() {
     }
     this.bmd = game.add.bitmapData(game.width, game.height);
     bg = game.add.sprite(0, 0, this.bmd);
+    btEchap = this.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    btEchap.onDown.add(this.leaveGave, this);
     this.tickRefresh = 5;
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       this.modeDeJeu = "mobile";
@@ -219,21 +228,29 @@ GamePlay = (function() {
       btG.onDown.add(this.listenerBoutonG1, this);
       btD = this.input.keyboard.addKey(Phaser.Keyboard.Z);
       btD.onDown.add(this.listenerBoutonD1, this);
+      sprite = game.add.sprite(0, 0, 'touche_a');
+      sprite = game.add.sprite(sprite.width, 0, 'touche_z');
       if (this.nbJoueur >= 2) {
         btG = this.input.keyboard.addKey(Phaser.Keyboard.T);
         btG.onDown.add(this.listenerBoutonG2, this);
         btD = this.input.keyboard.addKey(Phaser.Keyboard.Y);
         btD.onDown.add(this.listenerBoutonD2, this);
+        sprite = game.add.sprite(game.width - sprite.width * 2, 0, 'touche_t');
+        sprite = game.add.sprite(game.width - sprite.width, 0, 'touche_y');
         if (this.nbJoueur >= 3) {
           btG = this.input.keyboard.addKey(Phaser.Keyboard.O);
           btG.onDown.add(this.listenerBoutonG3, this);
           btD = this.input.keyboard.addKey(Phaser.Keyboard.P);
           btD.onDown.add(this.listenerBoutonD3, this);
+          sprite = game.add.sprite(0, game.height - sprite.height, 'touche_o');
+          sprite = game.add.sprite(sprite.width, game.height - sprite.height, 'touche_p');
           if (this.nbJoueur === 4) {
             btG = this.input.keyboard.addKey(Phaser.Keyboard.LEFT);
             btG.onDown.add(this.listenerBoutonG4, this);
             btD = this.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-            return btD.onDown.add(this.listenerBoutonD4, this);
+            btD.onDown.add(this.listenerBoutonD4, this);
+            sprite = game.add.sprite(game.width - sprite.width, game.height - sprite.height, 'touche_g');
+            return sprite = game.add.sprite(game.width - sprite.width * 2, sprite.y, 'touche_d');
           }
         }
       }
@@ -297,8 +314,11 @@ GamePlay = (function() {
   };
 
   GamePlay.prototype.winnerScreen = function() {
-    console.log("bonjour");
     return game.state.start(game.state.current, true, true, this.nbJoueur);
+  };
+
+  GamePlay.prototype.leaveGave = function() {
+    return game.state.start('GameTitle', true, true);
   };
 
   GamePlay.prototype.update = function() {
