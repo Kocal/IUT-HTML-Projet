@@ -132,8 +132,8 @@ class GamePlay
 
 
     if @nbJoueur == 1
-      @joueurs[0].x = game.width/4
-      @joueurs[0].y = game.height/4
+      @joueurs[0].x = game.width/2
+      @joueurs[0].y = game.height/2
       @joueurs[0].angle = 90
 
 
