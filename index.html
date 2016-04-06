@@ -9,7 +9,6 @@
 <body>
 <div id="game-container"></div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
 <script src="js/phaser.min.js"></script>
 <script src="js/state/Boot/Boot.js"></script>
 <script src="js/state/GameTitle/GameTitle.js"></script>
@@ -21,8 +20,11 @@
 
     var width = Math.round(window.innerWidth)
     var height = Math.round(window.innerHeight)
-    var game = new Phaser.Game(width, height, Phaser.AUTO, 'game-container');
 
+    var lePlusPetit = Math.min(width, height)
+
+    var game = new Phaser.Game(lePlusPetit, lePlusPetit, Phaser.AUTO, 'game-container');
+    
 
     game.state.add("Boot", Boot);
     game.state.add("GameTitle", GameTitle);
