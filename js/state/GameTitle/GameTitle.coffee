@@ -23,6 +23,8 @@ class GameTitle
     console.log 'GameTitle::create()' if debug
     self = @
 
+    @sButtonPlay = undefined
+
     #couleur de fond
     game.stage.backgroundColor = '#000000'
 

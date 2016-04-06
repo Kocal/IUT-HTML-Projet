@@ -31,6 +31,7 @@ GameTitle = (function() {
       console.log('GameTitle::create()');
     }
     self = this;
+    this.sButtonPlay = void 0;
     game.stage.backgroundColor = '#000000';
     this.randomGenerator = new Phaser.RandomDataGenerator;
     this.texture = this.game.add.renderTexture(this.game.world.width, this.game.world.height, 'mousetrail');
