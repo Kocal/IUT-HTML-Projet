@@ -127,6 +127,12 @@ article p{
     text-align: justify;
 }
 
+#demo img{
+    display: block;
+    margin: auto;
+    margin-top: 10px;
+}
+
 #createur .container-img{
     width: 70%;
     margin-left: 15%;
