@@ -50,7 +50,7 @@
     
     <article id="demo">
         <h1><initial class="blue">D</initial>ÉM<initial class="orange">O</initial></h1>
-        <div id="game-container"></div>
+        <div id="videoDemo"><video  src="demo.mp4"></video><div>
         <a href="play.html"><img src="assets/img/buttonPlay.png" class="PLAY" alt="PLAY"/></a>
     </article>
     
@@ -80,22 +80,5 @@
 <script src="js/state/GameTitle/GameTitle.js"></script>
 <script src="js/state/GamePlay/GamePlay.js"></script>
 
-
-<script>
-    var debug = false;
-
-    var width = Math.round(window.innerWidth)
-    var height = Math.round(window.innerHeight)
-
-    var lePlusPetit = Math.min(width, height)
-
-    var game = new Phaser.Game(lePlusPetit, lePlusPetit, Phaser.AUTO, 'game-container');
-    
-
-    game.state.add("Boot", Boot);
-    game.state.add("GameTitle", GameTitle);
-    game.state.add("GamePlay", GamePlay);
-    game.state.start("Boot", true, true);
-</script>
 </body>
 </html>
