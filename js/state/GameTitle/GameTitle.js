@@ -15,14 +15,14 @@ GameTitle = (function() {
     if (debug) {
       console.log('GameTitle::preload()');
     }
-    this.game.load.image('logo', '/assets/img/logo.png');
+    this.game.load.image('logo', 'assets/img/logo.png');
     ref = this.buttonsPlayer;
     for (j = 0, len = ref.length; j < len; j++) {
       buttonPlayer = ref[j];
-      this.game.load.image(buttonPlayer, "/assets/img/" + buttonPlayer + ".png");
+      this.game.load.image(buttonPlayer, "assets/img/" + buttonPlayer + ".png");
     }
-    this.game.load.image('orangeTrace', '/assets/img/orangeTrace.png');
-    this.game.load.image('blueTrace', '/assets/img/blueTrace.png');
+    this.game.load.image('orangeTrace', 'assets/img/orangeTrace.png');
+    this.game.load.image('blueTrace', 'assets/img/blueTrace.png');
   };
 
   GameTitle.prototype.create = function() {

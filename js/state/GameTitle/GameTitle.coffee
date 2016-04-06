@@ -9,13 +9,13 @@ class GameTitle
 
   preload: ->
     console.log 'GameTitle::preload()' if debug
-    @game.load.image 'logo', '/assets/img/logo.png'
+    @game.load.image 'logo', 'assets/img/logo.png'
 
     for buttonPlayer in @buttonsPlayer
-      @game.load.image buttonPlayer, "/assets/img/#{buttonPlayer}.png"
+      @game.load.image buttonPlayer, "assets/img/#{buttonPlayer}.png"
 
-    @game.load.image 'orangeTrace', '/assets/img/orangeTrace.png'
-    @game.load.image 'blueTrace', '/assets/img/blueTrace.png'
+    @game.load.image 'orangeTrace', 'assets/img/orangeTrace.png'
+    @game.load.image 'blueTrace', 'assets/img/blueTrace.png'
 
     return
 

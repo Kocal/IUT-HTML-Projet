@@ -8,10 +8,6 @@
 </head>
 <body>
 
-<header>
-    <h1>Ouais bo je</h1>
-</header>
-
 <div id="game-container"></div>
 
 <script src="js/phaser.min.js"></script>
@@ -19,14 +15,20 @@
 <script src="js/state/GameTitle/GameTitle.js"></script>
 <script src="js/state/GamePlay/GamePlay.js"></script>
 <script>
-    var debug = true;
-    var gameContainer = document.querySelector("#game-container");
-    var game = new Phaser.Game(gameContainer.offsetWidth, gameContainer.offsetHeight, Phaser.AUTO, 'game-container');
+    var debug = false;
+
+    var width = Math.round(window.innerWidth)
+    var height = Math.round(window.innerHeight)
+
+    var lePlusPetit = Math.min(width, height)
+
+    var game = new Phaser.Game(lePlusPetit, lePlusPetit, Phaser.AUTO, 'game-container');
+    
 
     game.state.add("Boot", Boot);
     game.state.add("GameTitle", GameTitle);
     game.state.add("GamePlay", GamePlay);
-    game.state.start("Boot")
+    game.state.start("Boot", true, true);
 </script>
 </body>
 </html>
