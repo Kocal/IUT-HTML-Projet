@@ -3,13 +3,17 @@ class GameTitle
   constructor: (@game) ->
     console.log 'GameTitle::constructor()' if debug
 
-
-
+    @buttonsPlayer = [
+      'buttonOnePlayer', 'buttonTwoPlayers', 'buttonThreePlayers', 'buttonFourPlayers'
+    ]
 
   preload: ->
     console.log 'GameTitle::preload()' if debug
     @game.load.image 'logo', '/assets/img/logo.png'
-    @game.load.image 'buttonPlay', '/assets/img/buttonPlay.png'
+
+    for buttonPlayer in @buttonsPlayer
+      @game.load.image buttonPlayer, "/assets/img/#{buttonPlayer}.png"
+
     @game.load.image 'orangeTrace', '/assets/img/orangeTrace.png'
     @game.load.image 'blueTrace', '/assets/img/blueTrace.png'
 
@@ -17,6 +21,7 @@ class GameTitle
 
   create: ->
     console.log 'GameTitle::create()' if debug
+    self = @
 
     #couleur de fond
     game.stage.backgroundColor = '#000000'
@@ -36,14 +41,18 @@ class GameTitle
       @traces.add @_initATrace()
     , @
 
-
     # Ajout du logo
-    @sLogo = @game.add.sprite @game.world.centerX, @game.world.centerY, 'logo'
+    @sLogo = @game.add.sprite @game.world.centerX, @game.world.centerY - 100, 'logo'
     @sLogo.anchor.setTo 0.5, 1
 
-    # Ajout du bouton play
-    @sButtonPlay = @game.add.button @game.world.centerX, @sLogo.y, 'buttonPlay', @onButtonPlayClick, @, 0, 1, 2
-    @sButtonPlay.anchor.setTo 0.5, -1
+    for buttonPlayer, i in @buttonsPlayer
+      y = if @sButtonPlay? then @sButtonPlay.y else @sLogo.y
+
+      @sButtonPlay = @game.add.button @game.world.centerX, y + 60, buttonPlayer, do (i) ->
+          ->
+            self.onButtonPlayClick i+1
+      , @, 0, 1, 2
+      @sButtonPlay.anchor.setTo 0.5, -1
 
     return
 
@@ -60,9 +69,9 @@ class GameTitle
     return
 
 
-  onButtonPlayClick: ->
-    console.log 'Jouer'
-    @game.state.start 'GamePlay', true, true, 4
+  onButtonPlayClick: (players) ->
+    console.log players
+    @game.state.start 'GamePlay', true, true, players
 
     return
 
