@@ -133,8 +133,8 @@ GamePlay = (function() {
       this.joueurs[i].anchor.set(0.5);
     }
     if (this.nbJoueur === 1) {
-      this.joueurs[0].x = game.width / 4;
-      this.joueurs[0].y = game.height / 4;
+      this.joueurs[0].x = game.width / 2;
+      this.joueurs[0].y = game.height / 2;
       this.joueurs[0].angle = 90;
     } else if (this.nbJoueur === 2) {
       this.joueurs[0].x = game.width / 4;
