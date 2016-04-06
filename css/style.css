@@ -16,7 +16,8 @@ body {
 
 @media screen and (max-width: 700px) {
   header {
-    display: none; } }
+   /* display: none;*/ } 
+}
 #game-container {
   flex: 1;
   width: 100%; }
@@ -31,3 +32,130 @@ body {
   box-shadow: 0 0 5px #FFE64D; }
 
 /*# sourceMappingURL=style.css.map */
+
+header{
+    
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  letter-spacing: 5px;
+  text-shadow: 0 0 7px #f3f3f3,
+        0 0 7px #f3f3f3,
+        0 0 7px #f3f3f3;
+}
+
+body>header>h1{
+    font-size: 300%;
+}
+body>header>h1:hover{
+    text-shadow: 0 0 17px #f3f3f3,
+        0 0 17px #f3f3f3,
+        0 0 17px #f3f3f3;
+}
+
+.blue{
+    color: #2906FF;
+    text-shadow: 0 0 5px #2906FF,
+        0 0 7px #2906FF,
+        0 0 7px #2906FF;
+    font-size: 150%;
+}
+
+.orange{
+    color: #FF9E15;
+    text-shadow: 0 0 5px #FF9E15,
+        0 0 7px #FF9E15,
+        0 0 7px #FF9E15;
+    font-size: 150%;
+}
+
+nav{
+    float: left;
+    margin-bottom: 5%;
+    width: 100%;
+    text-align: center;
+}
+
+nav .container{
+    width: 160px;
+    margin: auto;
+    padding-bottom: 50px;
+}
+
+nav a{
+    color: white;
+    text-decoration: none;
+    font-family: 'Audiowide', cursive;
+    display: block;
+    margin-bottom: 3%;
+}
+
+nav a:hover{
+    text-shadow: 0 0 17px #f3f3f3,
+        0 0 17px #f3f3f3,
+        0 0 17px #f3f3f3;
+}
+
+article{
+    /*border: solid green 1px;*/
+    width: 100%;
+    text-align: left;
+    margin-top: 20px;
+    
+    color: white;
+    font-family: 'Audiowide', cursive;
+    
+}
+
+article h1{
+    font-size: 200%;
+    margin-left: 2%;
+    width: 96%;
+    border-bottom: solid white 1px;
+    text-shadow: 0 0 5px #f3f3f3,
+        0 0 5px #f3f3f3,
+        0 0 5px #f3f3f3;
+}
+
+article h2{
+    margin-left: 5%;
+}
+
+article p{
+    margin-left: 10%;
+    margin-right: 5%;
+    text-align: justify;
+}
+
+#demo img{
+    display: block;
+    margin: auto;
+    margin-top: 10px;
+}
+
+#createur .container-img{
+    width: 70%;
+    margin-left: 15%;
+    margin: auto;
+}
+
+#createur .img{
+    display: inline-block;
+    width: 200px;
+    height: 250px;
+    padding-left: 5%;
+}
+
+#createur .img figcaption{
+    text-align: left;
+}
+
+#createur img{
+    width: 200px;
+    height: 200px;
+}
+
+#videoDemo {
+    text-align: center;
+}
+
